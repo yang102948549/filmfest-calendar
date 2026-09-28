@@ -258,6 +258,7 @@ table.pt{border-collapse:separate;border-spacing:0;min-width:100%;font-size:15px
 .lessons.editing textarea{grid-column:2;min-height:60px;font-size:15px;padding:7px 10px}
 .lessons.editing .del{grid-row:1;grid-column:3;color:var(--muted)}
 .lessons.editing .del:hover:not(:disabled){color:var(--danger)}
+.lessons.editing .del.armed{color:var(--danger);background:var(--danger-soft);font-size:13px;font-weight:600;padding:6px 10px}
 .lesson-actions{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;margin-top:14px}
 .lesson-actions .add{margin-right:auto}
 
@@ -297,17 +298,17 @@ table.pt{border-collapse:separate;border-spacing:0;min-width:100%;font-size:15px
 	.day-heading small,.day-add{display:none}
 	.day-content{gap:2px}
 	/* 일정은 색 막대 한 줄: 교과·외부는 학급, 학교 일정은 제목 */
-	.day .row-wrap{display:block}
-	.day .row-wrap:nth-child(n+4){display:none}
-	.day .entry,.day .entry:hover{display:block;padding:1px 3px;border-radius:4px;font-size:11px;font-weight:600;line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-.3px}
-	.day .entry.k-event{background:var(--ev-bg);color:var(--ev-fg)}
-	.day .entry.k-subject{background:var(--sub-bg);color:var(--sub-fg)}
-	.day .entry.k-ext{background:var(--ext-bg);color:var(--ext-fg)}
-	.day .row-wrap.todo .entry{background:none;color:var(--ink-2);box-shadow:inset 0 0 0 1px var(--line)}
-	.day .entry .row-chip,.day .entry .sub,.day .entry .note-mark,.day .task,.day .trash{display:none}
-	.day .entry .cls,.day .entry .entry-title{display:inline;font-size:11px;font-weight:600;color:inherit}
-	.day .entry .cls+.entry-title::before{content:" "}
-	.more-m{display:block;font-size:10px;color:var(--muted);padding-left:3px;font-weight:600}
+	.day .row-wrap{display:flex;align-items:center;gap:1px;border-radius:4px}
+	.day .row-wrap:nth-child(n+5){display:none}
+	.day .entry,.day .entry:hover{display:flex;align-items:center;flex-wrap:nowrap;gap:2px;padding:1px;border-radius:4px;font-size:10px;font-weight:600;line-height:1.3;white-space:nowrap;overflow:hidden;background:none;letter-spacing:-.4px}
+	.day .entry .row-chip{font-size:9px;padding:0 3px;border-radius:3px;line-height:1.55;letter-spacing:-.3px}
+	.day .entry .row-chip .unit,.day .entry .sub,.day .entry .note-mark,.day .trash{display:none}
+	.day .entry .cls,.day .entry .entry-title{font-size:10px;font-weight:600;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+	.day .entry .cls{flex-shrink:0;max-width:100%}
+	.day .task{padding:1px 1px 1px 0}
+	.day .task-box{width:12px;height:12px;border-width:1.5px;border-radius:3px}
+	.day .task-box svg{width:8px;height:8px}
+	.more-m{display:block;font-size:9px;color:var(--muted);padding-left:3px;font-weight:600}
 
 	/* 날짜를 누르면 아래에서 올라오는 그날 일정 */
 	.day-panel{position:fixed;left:0;right:0;bottom:0;z-index:60;width:auto;max-height:62dvh;border-radius:18px 18px 0 0;border:0;box-shadow:0 -10px 40px #1d2d4a33;padding:16px 16px calc(20px + env(safe-area-inset-bottom,0px))}
@@ -583,6 +584,8 @@ function periodLabel(p){
 	return a.join('·') + '교시';
 }
 const chipText = e => periodLabel(e.periods) || TYPES[typeOf(e)].chip;
+// 달력 칩: 모바일에서는 '교시'를 숨기고 숫자만 (예: 2·3)
+const chipHtml = e => { const p = periodLabel(e.periods); return p ? `${p.replace('교시', '')}<span class="unit">교시</span>` : TYPES[typeOf(e)].chip; };
 const classText = e => e.classes === 'all' ? '전학급' : (e.classes || []).join(', ');
 const sessionNums = e => [...new Set(classesOf(e).map(c => e.sessions?.[c]).filter(Boolean))].sort((a, b) => a - b);
 function extSummary(e){
@@ -678,7 +681,7 @@ function entryRow(e){
 	const lead = e.todo
 		? `<button class="task" data-todo="${e.id}" aria-label="${esc(titleOf(e))} ${e.done ? '완료 취소' : '완료'}" aria-pressed="${!!e.done}"><span class="task-box${e.done ? ' on' : ''}">${e.done ? CHECK : ''}</span></button>`
 		: '';
-	const chip = e.todo ? (e.periods?.length ? `<span class="sub">${periodLabel(e.periods)}</span>` : '') : `<span class="row-chip t-${t}">${chipText(e)}</span>`;
+	const chip = e.todo ? (e.periods?.length ? `<span class="sub">${periodLabel(e.periods)}</span>` : '') : `<span class="row-chip t-${t}">${chipHtml(e)}</span>`;
 	return `<div class="row-wrap${e.todo ? ' todo' : ''}${e.done ? ' done' : ''}">${lead}<button class="entry k-${t}" data-id="${e.id}" style="--dot:var(--${t === 'event' ? 'ev-fg' : t === 'ext' ? 'ext-solid' : 'sub-fg'})" aria-label="${esc(`${TYPES[t].name} ${chipText(e)} ${cls} ${titleOf(e)} 수정`)}">${chip}${body}${e.note ? NOTE_ICON : ''}</button><button class="trash" data-del="${e.id}" aria-label="${esc(titleOf(e))} 삭제" title="삭제">${TRASH}</button></div>`;
 }
 
@@ -700,7 +703,7 @@ function renderGrid(){
 		const cls = ['day', (wd === 0 || wd === 6) && 'wkend', wd === 0 && 'sun', d.getMonth() !== m && 'out', key === state.day && 'selected', inFest(key) && 'fest', (i + 1) % cols.length === 0 && 'edge'].filter(Boolean).join(' ');
 		return `<div class="${cls}" data-date="${key}">
 			<div class="day-heading"><button class="date-number${key === today ? ' today' : ''}" data-open="${key}" aria-label="${longDate(key)} 일정 보기">${d.getDate()}</button>${key === today ? '<small>오늘</small>' : inFest(key) ? `<small class="fest-tag">영화제 ${festDay(key)}일차</small>` : ''}<button class="day-add" data-add="${key}" aria-label="${longDate(key)} 일정 추가" title="일정 추가">${PLUS}</button></div>
-			<div class="day-content">${list.map(entryRow).join('')}${list.length > 3 ? `<span class="more-m">+${list.length - 3}</span>` : ''}</div>
+			<div class="day-content">${list.map(entryRow).join('')}${list.length > 4 ? `<span class="more-m">+${list.length - 4}</span>` : ''}</div>
 		</div>`;
 	}).join('');
 	$('#grid').style.setProperty('--cols', cols.length);
@@ -774,7 +777,7 @@ function renderLessons(){
 		${draft ? '' : `<button class="small" data-act="edit-lessons">편집</button>`}</header>
 		${!L.length && !draft ? '<p class="muted" style="margin-top:12px">아직 등록된 차시가 없어요. 편집을 눌러 추가해 주세요.</p>' : ''}
 		<ol class="lessons${draft ? ' editing' : ''}">${L.map((l, i) => draft
-			? `<li><span class="no">${i+1}</span><input data-li="${i}" data-k="title" value="${esc(l.title)}" placeholder="활동명" aria-label="${i+1}차시 활동명"><button class="icon del" data-act="del-lesson" data-i="${i}" ${i < used ? `disabled title="이미 진행했거나 일정이 잡힌 차시예요"` : ''} aria-label="${i+1}차시 삭제">${CLOSE}</button><textarea data-li="${i}" data-k="detail" placeholder="세부 내용 (선택)" aria-label="${i+1}차시 세부 내용">${esc(l.detail)}</textarea></li>`
+			? `<li><span class="no">${i+1}</span><input data-li="${i}" data-k="title" value="${esc(l.title)}" placeholder="활동명" aria-label="${i+1}차시 활동명"><button class="icon del" data-act="del-lesson" data-i="${i}" data-used="${i < used}" aria-label="${i+1}차시 삭제" title="삭제">${CLOSE}</button><textarea data-li="${i}" data-k="detail" placeholder="세부 내용 (선택)" aria-label="${i+1}차시 세부 내용">${esc(l.detail)}</textarea></li>`
 			: `<li><span class="no">${i+1}</span><span class="lt">${esc(l.title)}</span>${l.detail ? `<span class="ld">${esc(l.detail)}</span>` : ''}</li>`).join('')}</ol>
 		${draft ? `<p class="err" id="lessonErr" hidden></p><div class="lesson-actions"><button class="small add" data-act="add-lesson">${PLUS}차시 추가</button><button class="small" data-act="cancel-lessons">취소</button><button class="small primary" data-act="save-lessons">저장</button></div>` : ''}`;
 }
@@ -995,12 +998,19 @@ $('#lessonPanel').addEventListener('click', async e => {
 	if (act === 'edit-lessons') { state.lessonDraft = lessons(); if (!state.lessonDraft.length) state.lessonDraft.push({title:'', detail:''}); return renderLessons(); }
 	if (act === 'cancel-lessons') { state.lessonDraft = null; return renderLessons(); }
 	if (act === 'add-lesson') { state.lessonDraft.push({title:'', detail:''}); renderLessons(); return document.querySelector(`[data-li="${state.lessonDraft.length - 1}"]`)?.focus(); }
-	if (act === 'del-lesson') { state.lessonDraft.splice(Number(b.dataset.i), 1); return renderLessons(); }
+	if (act === 'del-lesson') {
+		// 이미 일정·진도에 쓰인 차시는 한 번 더 눌러야 지워짐 (뒤 차시 번호가 하나씩 당겨짐)
+		if (b.dataset.used === 'true' && !b.classList.contains('armed')) {
+			b.classList.add('armed'); b.textContent = '한 번 더 눌러 삭제';
+			const err = $('#lessonErr'); err.textContent = `${Number(b.dataset.i) + 1}차시는 이미 일정이나 진도에 쓰이고 있어요. 지우면 뒤 차시 번호가 하나씩 당겨져요.`; err.hidden = false;
+			return;
+		}
+		state.lessonDraft.splice(Number(b.dataset.i), 1); return renderLessons();
+	}
 	if (act === 'save-lessons') {
 		const list = state.lessonDraft.map(l => ({title:l.title.trim(), detail:l.detail.trim()}));
 		const err = $('#lessonErr'), blank = list.findIndex(l => !l.title);
 		if (blank >= 0) { err.textContent = `${blank + 1}차시 활동명을 입력해 주세요.`; err.hidden = false; return; }
-		if (list.length < usedLessons()) { err.textContent = `이미 ${usedLessons()}차시까지 진행했거나 일정이 잡혀 있어요.`; err.hidden = false; return; }
 		const prevCfg = state.cfg;
 		state.cfg = {...state.cfg, lessons:list}; state.lessonDraft = null; render();
 		try { await backend.set('settings/festival', state.cfg); toast('차시 구성을 저장했어요'); }
