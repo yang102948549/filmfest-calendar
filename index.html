@@ -269,7 +269,7 @@ table.pt{border-collapse:separate;border-spacing:0;min-width:100%;font-size:15px
 .toast button{border:0;background:none;color:#8cc2ff;font-weight:700;font-size:15px;padding:0}
 
 @media (max-width:1200px){.day-panel,.lesson-panel{width:340px}.search{width:130px}.live span{display:none}}
-.fab,.more-m{display:none}
+.fab,.more-m,.toolbar>.legend-m{display:none}
 
 /* ── 모바일: 구글 캘린더처럼 달력이 화면을 채우고, 날짜를 누르면 아래에서 그날 일정이 올라옴 ── */
 @media (max-width:760px){
@@ -290,8 +290,13 @@ table.pt{border-collapse:separate;border-spacing:0;min-width:100%;font-size:15px
 	.toolbar{padding:10px 12px 8px;flex-wrap:nowrap}
 	.toolbar>div:first-child{flex-wrap:nowrap;gap:2px}
 	.toolbar>div:last-child,#festBtn,.weekend-toggle,.calendar-footer{display:none}
-	.toolbar h2{font-size:21px;margin-right:6px}
-	.toolbar .icon{padding:6px}
+	.toolbar h2{font-size:19px;margin-right:4px}
+	.toolbar #todayBtn{font-size:13px;padding:4px 10px;border-radius:8px;margin-left:2px}
+	/* 색 안내: 칩 색 = 학교 일정·교과 수업·외부 강사 */
+	.toolbar>.legend-m{display:flex;flex-wrap:nowrap;gap:7px;font-size:11px;font-weight:600;color:var(--ink-2);white-space:nowrap;letter-spacing:-.3px}
+	.legend-m span{display:inline-flex;align-items:center;gap:3px}
+	.legend-m span::before{content:"";width:8px;height:8px;border-radius:2px;background:var(--c)}
+	.toolbar .icon{padding:5px 3px}
 
 	.weekdays span{font-size:12px;padding:6px 0}
 	.month-scroll{overflow-y:auto}
@@ -432,6 +437,8 @@ table.pt{border-collapse:separate;border-spacing:0;min-width:100%;font-size:15px
 					<button class="small" id="festBtn">영화제 기간</button>
 					<label class="weekend-toggle"><input type="checkbox" id="weekendToggle">주말 표시</label>
 				</div>
+				<!-- 모바일 전용 색 안내: 칩 색이 무슨 종류인지 -->
+				<div class="legend-m" aria-label="색 안내"><span style="--c:var(--ev-fg)">학교</span><span style="--c:var(--sub-fg)">교과</span><span style="--c:var(--ext-solid)">외부강사</span></div>
 				<div>
 					<button class="filter" data-filter="event" aria-pressed="true">학교 일정</button>
 					<button class="filter" data-filter="subject" aria-pressed="true">교과 수업</button>
