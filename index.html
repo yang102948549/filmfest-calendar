@@ -179,12 +179,16 @@ svg{flex-shrink:0}
 .modal footer button{min-width:84px}
 .modal footer .danger{color:var(--danger);margin-right:auto;border-color:transparent;background:transparent}
 .modal footer .danger.armed{background:var(--danger-soft)}
-.segmented{display:grid;grid-template-columns:repeat(3,1fr);background:var(--hover);padding:3px;border-radius:10px;margin-bottom:22px;gap:2px}
-.segmented button{border:0;background:none;color:var(--ink-2);font-size:16px;font-weight:600;padding:9px 8px;border-radius:8px}
-/* 선택된 종류는 그 종류의 색으로 */
-.segmented button[data-type="event"][aria-pressed="true"]{background:var(--ev-bg);color:var(--ev-fg);}
-.segmented button[data-type="subject"][aria-pressed="true"]{background:var(--sub-bg);color:var(--sub-fg);}
-.segmented button[data-type="ext"][aria-pressed="true"]{background:var(--ext-bg);color:var(--ext-fg);}
+/* 종류 선택: 회색 트랙 위 세 칸. 칸마다 종류 색 점, 고른 칸은 흰 카드가 올라오고 글자가 그 종류 색 */
+.segmented{display:grid;grid-template-columns:repeat(3,1fr);background:var(--hover);border:1px solid var(--line);padding:3px;border-radius:10px;margin-bottom:20px;gap:3px}
+.segmented button{border:0;background:none;color:var(--ink-2);font-size:15px;font-weight:600;padding:8px 6px;border-radius:7px;gap:6px}
+.segmented button::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--c);opacity:.55;flex-shrink:0}
+.segmented button[data-type="event"]{--c:var(--ev-fg)}
+.segmented button[data-type="subject"]{--c:var(--sub-fg)}
+.segmented button[data-type="ext"]{--c:var(--ext-fg)}
+.segmented button:hover:not([aria-pressed="true"]){background:#ffffff99;color:var(--ink)}
+.segmented button[aria-pressed="true"],.segmented button[aria-pressed="true"]:hover{background:var(--panel);color:var(--c);font-weight:700;box-shadow:0 1px 3px #0000001f,0 0 0 1px #0000000a}
+.segmented button[aria-pressed="true"]::before{opacity:1}
 .field{display:flex;flex-direction:column;gap:9px;margin-bottom:20px}
 .field>span,.field>label{font-size:15px;font-weight:600;color:var(--ink-2)}
 .field>span em,.field>label em{font-style:normal;font-weight:500;color:var(--muted);margin-left:6px}
@@ -193,7 +197,6 @@ svg{flex-shrink:0}
 .pill{border-radius:10px;border:1px solid var(--line);background:var(--panel-2);color:var(--ink-2);font-size:16px;font-weight:600;padding:9px 6px;width:100%;font-variant-numeric:tabular-nums}
 .pill:hover{border-color:var(--blue);color:var(--blue-ink)}
 .pill[aria-pressed="true"],.pill[aria-pressed="true"]:hover{background:var(--blue);border-color:var(--blue);color:#fff}
-.segmented button:hover{color:var(--ink)}
 /* 교시·학급 선택도 고른 종류의 색으로 */
 .modal.type-event .pill[aria-pressed="true"]{background:var(--ev-bg);border-color:var(--ev-fg);color:var(--ev-fg);box-shadow:inset 0 0 0 .5px var(--ev-fg)}
 .modal.type-subject .pill[aria-pressed="true"]{background:var(--sub-bg);border-color:var(--sub-fg);color:var(--sub-fg);box-shadow:inset 0 0 0 .5px var(--sub-fg)}
@@ -317,9 +320,12 @@ table.pt{border-collapse:separate;border-spacing:0;min-width:100%;font-size:15px
 	.day-panel{position:fixed;left:0;right:0;bottom:0;z-index:60;width:auto;max-height:62dvh;border-radius:18px 18px 0 0;border:0;box-shadow:0 -10px 40px #1d2d4a33;padding:16px 16px calc(20px + env(safe-area-inset-bottom,0px))}
 	.day-panel h2{font-size:20px}
 	.day-panel .trash{visibility:visible}
+	.day-panel .primary.small{font-size:13px;padding:5px 10px;gap:3px;border-radius:8px}
+	.day-panel .primary.small svg{width:13px;height:13px}
 	.day-panel .overline{margin:14px 0 8px}
 	.sheet-open .fab{display:none}
-	.fab{display:grid;place-items:center;position:fixed;right:16px;bottom:calc(20px + env(safe-area-inset-bottom,0px));z-index:50;width:56px;height:56px;border-radius:18px;border:0;background:var(--blue);color:#fff;box-shadow:0 6px 20px #007aff55;padding:0}
+	.fab{display:grid;place-items:center;position:fixed;right:14px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:50;width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:var(--panel);color:var(--blue);box-shadow:0 2px 10px #1d2d4a26;padding:0}
+	.fab svg{width:20px;height:20px}
 
 	.prog-panel{border:0;border-radius:0;box-shadow:none;flex:none}
 	#progView{flex-direction:column;overflow-y:auto}
@@ -359,11 +365,29 @@ table.pt{border-collapse:separate;border-spacing:0;min-width:100%;font-size:15px
 	.lesson-actions{gap:6px}
 
 	.overlay{padding:0;align-items:flex-end}
-	.modal{width:100%;max-height:92dvh;border-radius:20px 20px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom,0px))}
-	.modal h2{font-size:21px}
-	.segmented button{font-size:15px;padding:9px 4px}
-	.pgrid{grid-template-columns:repeat(4,1fr)}
-	.pill{font-size:15px;padding:9px 4px}
+	.modal{width:100%;max-height:90dvh;border-radius:16px 16px 0 0;padding:14px 14px calc(12px + env(safe-area-inset-bottom,0px))}
+	.modal>header{margin-bottom:12px}
+	.modal h2{font-size:17px}
+	.modal header p{font-size:13px;margin-top:1px}
+	.modal header .icon{padding:4px}
+	.segmented{margin-bottom:14px}
+	.segmented button{font-size:13px;padding:6px 2px;gap:4px}
+	.segmented button::before{width:6px;height:6px}
+	.field{gap:6px;margin-bottom:14px}
+	.field>span,.field>label{font-size:13px}
+	.field>span em,.field>label em{font-size:12px}
+	.modal input:not([type=checkbox]),.modal select,.modal textarea{min-height:38px;padding:7px 10px;font-size:16px;border-radius:8px}
+	.modal textarea{min-height:60px;line-height:1.45}
+	.pgrid,.cgrid{grid-template-columns:repeat(4,1fr);gap:5px}
+	.pill{font-size:13px;padding:6px 2px;border-radius:7px}
+	.checkline{font-size:14px;padding:8px 10px;margin:-4px 0 14px;border-radius:9px;gap:8px}
+	.checkline input{width:17px;height:17px}
+	.sess-edit{padding:8px;gap:6px}
+	.sess-edit .srow{grid-template-columns:40px 1fr;gap:8px}
+	.sess-edit b{font-size:14px}
+	.modal footer{margin-top:14px;padding-top:12px;gap:6px}
+	.modal footer button{min-width:0;font-size:14px;padding:7px 14px;border-radius:8px}
+	.err{font-size:13px}
 	.toast{bottom:calc(88px + env(safe-area-inset-bottom,0px))}
 }
 </style>
