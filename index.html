@@ -15,9 +15,9 @@
 	--blue:#007aff;--blue-ink:#0063d1;--blue-soft:#e8f2ff;--blue-ring:#8cc2ff;
 	--sun:#d05d5d;--hover:#f4f8fe;--sel:#f6faff;
 	--fest:#f3f8ff;--fest-ink:#3b82e0;
-	--ev-bg:#e2edff;--ev-fg:#1f6fdc;
-	--sub-bg:#d8f1ea;--sub-fg:#1e7766;
-	--ext-bg:#fde4e2;--ext-fg:#c0433b;--ext-solid:#e8645c;
+	--ev-bg:#ebf3fe;--ev-fg:#2b6cd9;--ev-bd:#cfe1fb;
+	--sub-bg:#e8f5ee;--sub-fg:#2a7d52;--sub-bd:#cae7d6;
+	--ext-bg:#fdeeec;--ext-fg:#c4473c;--ext-bd:#f5d3cd;--ext-solid:#e2665b;
 	--danger:#d9443a;--danger-soft:#fdecea;
 	--shadow:0 8px 40px #233e6310;--pop:0 18px 50px #1d2d4a26;
 	--overlay:#1d2d4a55;
@@ -29,9 +29,9 @@
 	--blue:#0a84ff;--blue-ink:#5eaaff;--blue-soft:#12294a;--blue-ring:#1f5fb0;
 	--sun:#f08a8a;--hover:#1d2430;--sel:#18212e;
 	--fest:#141d2c;--fest-ink:#6aa8ff;
-	--ev-bg:#16304f;--ev-fg:#86bcff;
-	--sub-bg:#173a33;--sub-fg:#86dcc9;
-	--ext-bg:#3d2020;--ext-fg:#ff9d95;--ext-solid:#d9544c;
+	--ev-bg:#172a45;--ev-fg:#8dbdff;--ev-bd:#27436d;
+	--sub-bg:#15301f;--sub-fg:#7fd3a3;--sub-bd:#234c31;
+	--ext-bg:#3a1f1d;--ext-fg:#ff9f94;--ext-bd:#5c302b;--ext-solid:#d9584d;
 	--danger:#ff6b61;--danger-soft:#3b1c1a;
 	--shadow:0 8px 40px #0007;--pop:0 18px 50px #000a;--overlay:#000a;}}
 :root[data-theme="dark"]{color-scheme:dark;
@@ -41,9 +41,9 @@
 	--blue:#0a84ff;--blue-ink:#5eaaff;--blue-soft:#12294a;--blue-ring:#1f5fb0;
 	--sun:#f08a8a;--hover:#1d2430;--sel:#18212e;
 	--fest:#141d2c;--fest-ink:#6aa8ff;
-	--ev-bg:#16304f;--ev-fg:#86bcff;
-	--sub-bg:#173a33;--sub-fg:#86dcc9;
-	--ext-bg:#3d2020;--ext-fg:#ff9d95;--ext-solid:#d9544c;
+	--ev-bg:#172a45;--ev-fg:#8dbdff;--ev-bd:#27436d;
+	--sub-bg:#15301f;--sub-fg:#7fd3a3;--sub-bd:#234c31;
+	--ext-bg:#3a1f1d;--ext-fg:#ff9f94;--ext-bd:#5c302b;--ext-solid:#d9584d;
 	--danger:#ff6b61;--danger-soft:#3b1c1a;
 	--shadow:0 8px 40px #0007;--pop:0 18px 50px #000a;--overlay:#000a;}
 
@@ -71,9 +71,9 @@ svg{flex-shrink:0}
 
 /* 칩 하나: 색 = 일정·교과·외부, 글자 = 교시 */
 .row-chip{display:inline-flex;align-items:center;border-radius:6px;padding:2px 7px;font-size:14px;font-weight:700;line-height:1.4;flex-shrink:0;white-space:nowrap;letter-spacing:0}
-.t-event{background:var(--ev-bg);color:var(--ev-fg)}
-.t-subject{background:var(--sub-bg);color:var(--sub-fg)}
-.t-ext{background:var(--ext-bg);color:var(--ext-fg)}
+.t-event{background:var(--ev-bg);color:var(--ev-fg);box-shadow:inset 0 0 0 1px var(--ev-bd)}
+.t-subject{background:var(--sub-bg);color:var(--sub-fg);box-shadow:inset 0 0 0 1px var(--sub-bd)}
+.t-ext{background:var(--ext-bg);color:var(--ext-fg);box-shadow:inset 0 0 0 1px var(--ext-bd)}
 
 /* shell */
 .app{height:100%;display:flex;flex-direction:column}
@@ -86,10 +86,11 @@ svg{flex-shrink:0}
 .brand-text b{font-size:18px;font-weight:700;color:var(--ink);letter-spacing:-.3px;font-variant-numeric:tabular-nums}
 .brand-text b.unset{font-size:15px;font-weight:600;color:var(--blue-ink)}
 /* 탭: 애플식 세그먼트 */
-.tabs{display:flex;padding:3px;background:var(--panel-2);border:1px solid var(--line);border-radius:11px}
-.tabs button{border:0;background:transparent;color:var(--ink-2);font-size:16px;font-weight:600;padding:7px 18px;border-radius:8px;min-width:96px}
-.tabs button:hover{color:var(--ink)}
-.tabs button[aria-selected="true"]{background:var(--panel);color:var(--ink);box-shadow:0 1px 3px #1d2d4a1f,0 0 0 .5px #1d2d4a14}
+.tabs{display:flex;gap:2px;padding:4px;background:var(--panel-2);border:1px solid var(--line);border-radius:12px}
+.tabs button{border:0;background:transparent;color:var(--ink-2);font-size:16px;font-weight:600;padding:8px 16px;border-radius:9px;gap:7px}
+.tabs button:hover{background:var(--hover);color:var(--ink)}
+.tabs button[aria-selected="true"],.tabs button[aria-selected="true"]:hover{background:var(--blue);color:#fff;box-shadow:0 2px 8px #007aff38}
+.settings-btn{gap:7px;font-size:15px;font-weight:600;padding:8px 13px}
 .top-right{display:flex;align-items:center;gap:12px;flex-shrink:0}
 .live{display:flex;align-items:center;gap:7px;font-size:14px;color:var(--muted);white-space:nowrap}
 .live i{width:8px;height:8px;border-radius:50%;background:var(--faint)}
@@ -203,10 +204,13 @@ svg{flex-shrink:0}
 .modal footer .danger{color:var(--danger);margin-right:auto;border-color:transparent;background:transparent}
 .modal footer .danger.armed{background:var(--danger-soft)}
 .segmented{display:grid;grid-template-columns:repeat(3,1fr);background:var(--panel-2);border:1px solid var(--line);padding:4px;border-radius:12px;margin-bottom:22px;gap:4px}
-.segmented button{border:0;background:none;color:var(--muted);font-size:17px;font-weight:600;padding:10px 8px;border-radius:9px;gap:8px}
-.segmented button i{width:10px;height:10px;border-radius:3px}
-.sw-event{background:var(--blue)}.sw-subject{background:var(--sub-fg)}.sw-ext{background:var(--ext-solid)}
-.segmented button[aria-pressed="true"]{background:var(--panel);color:var(--ink);box-shadow:0 1px 6px #1d2d4a18}
+.segmented button{border:0;background:none;color:var(--ink-2);font-size:17px;font-weight:600;padding:10px 8px;border-radius:9px;gap:8px}
+.segmented button i{width:9px;height:9px;border-radius:50%}
+.sw-event{background:var(--ev-fg)}.sw-subject{background:var(--sub-fg)}.sw-ext{background:var(--ext-fg)}
+/* 선택된 종류는 그 종류의 색으로 */
+.segmented button[data-type="event"][aria-pressed="true"]{background:var(--ev-bg);color:var(--ev-fg);box-shadow:inset 0 0 0 1.5px var(--ev-bd),0 1px 4px #1d2d4a12}
+.segmented button[data-type="subject"][aria-pressed="true"]{background:var(--sub-bg);color:var(--sub-fg);box-shadow:inset 0 0 0 1.5px var(--sub-bd),0 1px 4px #1d2d4a12}
+.segmented button[data-type="ext"][aria-pressed="true"]{background:var(--ext-bg);color:var(--ext-fg);box-shadow:inset 0 0 0 1.5px var(--ext-bd),0 1px 4px #1d2d4a12}
 .field{display:flex;flex-direction:column;gap:9px;margin-bottom:20px}
 .field>span,.field>label{font-size:15px;font-weight:600;color:var(--ink-2)}
 .field>span em,.field>label em{font-style:normal;font-weight:500;color:var(--muted);margin-left:6px}
@@ -216,6 +220,13 @@ svg{flex-shrink:0}
 .pill:hover{border-color:var(--blue);color:var(--blue-ink)}
 .pill[aria-pressed="true"],.pill[aria-pressed="true"]:hover{background:var(--blue);border-color:var(--blue);color:#fff}
 .segmented button:hover{color:var(--ink)}
+/* 교시·학급 선택도 고른 종류의 색으로 */
+.modal.type-event .pill[aria-pressed="true"]{background:var(--ev-bg);border-color:var(--ev-fg);color:var(--ev-fg);box-shadow:inset 0 0 0 .5px var(--ev-fg)}
+.modal.type-subject .pill[aria-pressed="true"]{background:var(--sub-bg);border-color:var(--sub-fg);color:var(--sub-fg);box-shadow:inset 0 0 0 .5px var(--sub-fg)}
+.modal.type-ext .pill[aria-pressed="true"]{background:var(--ext-bg);border-color:var(--ext-fg);color:var(--ext-fg);box-shadow:inset 0 0 0 .5px var(--ext-fg)}
+.modal.type-event .pill:hover{border-color:var(--ev-fg);color:var(--ev-fg)}
+.modal.type-subject .pill:hover{border-color:var(--sub-fg);color:var(--sub-fg)}
+.modal.type-ext .pill:hover{border-color:var(--ext-fg);color:var(--ext-fg)}
 .checkline{display:flex;align-items:center;gap:10px;font-size:16px;font-weight:600;color:var(--ink);cursor:pointer;margin:-4px 0 20px;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--panel-2)}
 .checkline input{width:20px;height:20px;min-height:0;accent-color:var(--blue);flex-shrink:0}
 .checkline em{font-style:normal;font-weight:500;color:var(--muted);font-size:14px}
@@ -291,7 +302,9 @@ table.pt{border-collapse:separate;border-spacing:0;min-width:100%;font-size:15px
 	.brand-mark{width:32px;height:32px}
 	.brand-text small{display:none}
 	.brand-text b{font-size:16px}
-	.tabs button{min-width:0;padding:6px 12px;font-size:15px}
+	.tabs button{padding:6px 10px;font-size:15px;gap:5px}
+	.tabs svg,.settings-btn span{display:none}
+	.settings-btn{padding:8px}
 	.live,.peers,.me{display:none}
 	.top-right{gap:0}
 
@@ -359,15 +372,15 @@ table.pt{border-collapse:separate;border-spacing:0;min-width:100%;font-size:15px
 				<span class="brand-text"><small>영화제</small><b id="dday">D-?</b></span>
 			</button>
 			<nav class="tabs" role="tablist">
-				<button role="tab" data-tab="cal" aria-selected="true">일정</button>
-				<button role="tab" data-tab="prog" aria-selected="false">외부강사 진도</button>
+				<button role="tab" data-tab="cal" aria-selected="true"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>일정</button>
+				<button role="tab" data-tab="prog" aria-selected="false"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>외부강사 진도</button>
 			</nav>
 		</div>
 		<div class="top-right">
 			<div class="live" id="live"><i></i><span id="liveText">연결 중</span></div>
 			<div class="peers" id="peers"></div>
 			<button class="me" id="meBtn" title="이름 바꾸기"></button>
-			<button class="icon" id="settingsBtn" aria-label="설정" title="영화제·학급 설정"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z"/></svg></button>
+			<button class="settings-btn" id="settingsBtn" title="영화제 기간·학급·교시 설정"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z"/></svg><span>설정</span></button>
 		</div>
 	</header>
 
@@ -845,7 +858,7 @@ function renderEditor(focus){
 	syncSessions();
 	const P = state.cfg.periods || 7, isNew = !ed.id, all = ed.classes === 'all', t = ed.type;
 	const hint = {event:'학교 전체 일정 · 교시와 학급은 필요할 때만', subject:'교과 시간에 학급별로 할 활동', ext:'외부 강사 수업 · 차시가 진도표에 반영돼요'}[t];
-	$('#modalRoot').innerHTML = `<div class="overlay" data-act="backdrop"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="edTitle">
+	$('#modalRoot').innerHTML = `<div class="overlay" data-act="backdrop"><div class="modal type-${t}" role="dialog" aria-modal="true" aria-labelledby="edTitle">
 		<header><div><h2 id="edTitle">${isNew ? '새 일정' : '일정 수정'}</h2><p>${longDate(ed.date)}</p></div><button class="icon" data-act="close" aria-label="닫기">${CLOSE}</button></header>
 		<form id="editor" novalidate>
 			<div class="segmented" role="group" aria-label="종류">${Object.entries(TYPES).map(([id, x]) => `<button type="button" data-type="${id}" aria-pressed="${t === id}"><i class="sw-${id}"></i>${x.name}</button>`).join('')}</div>
