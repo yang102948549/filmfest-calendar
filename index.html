@@ -41,7 +41,7 @@ svg{flex-shrink:0}
 .primary{background:var(--blue);border-color:var(--blue);color:#fff;font-weight:600}
 .primary:hover:not(:disabled){background:var(--blue-ink);border-color:var(--blue-ink)}
 .icon{padding:8px;border:0;background:transparent;color:var(--ink-2)}
-.icon:hover:not(:disabled),.me:hover,.brand:hover{background:var(--hover)}
+.icon:hover:not(:disabled),.brand:hover{background:var(--hover)}
 .small{font-size:15px;padding:7px 14px}
 .muted{color:var(--muted);font-size:16px;line-height:1.7;margin:0}
 .overline{font-size:13px;letter-spacing:.4px;color:var(--muted);margin:22px 0 10px;font-weight:600}
@@ -73,7 +73,6 @@ svg{flex-shrink:0}
 .peers{display:flex}
 .peers span{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:13px;font-weight:700;color:#fff;border:2px solid var(--panel);margin-left:-7px}
 .peers span:first-child{margin-left:0}
-.me{border:0;background:transparent;font-size:15px;color:var(--ink-2);padding:6px 8px}
 
 .page{flex:1;min-height:0;display:flex;gap:18px;padding:20px 24px}
 .panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}
@@ -278,7 +277,7 @@ table.pt{border-collapse:separate;border-spacing:0;min-width:100%;font-size:15px
 	.tabs button{padding:6px 10px;font-size:15px;gap:5px}
 	.tabs svg,.settings-btn span{display:none}
 	.settings-btn{padding:8px}
-	.live,.peers,.me{display:none}
+	.live,.peers{display:none}
 	.top-right{gap:0}
 
 	.page{padding:0;gap:0}
@@ -349,7 +348,6 @@ table.pt{border-collapse:separate;border-spacing:0;min-width:100%;font-size:15px
 		<div class="top-right">
 			<div class="live" id="live"><i></i><span id="liveText">연결 중</span></div>
 			<div class="peers" id="peers"></div>
-			<button class="me" id="meBtn" title="이름 바꾸기"></button>
 			<button class="settings-btn" id="settingsBtn" title="영화제 기간·학급·교시 설정"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z"/></svg><span>설정</span></button>
 		</div>
 	</header>
@@ -526,7 +524,6 @@ async function boot(){
 	backend.sub('progress', list => { state.progress = Object.fromEntries(list.filter(p => p.cls).map(p => [p.cls, p])); renderData(); });
 	backend.subDoc('settings/festival', cfg => { if (cfg) state.cfg = {...state.cfg, ...cfg}; render(); });
 	joinRoom();
-	if (!state.me) askName();
 }
 
 async function joinRoom(){
@@ -626,7 +623,6 @@ function renderHeader(){
 		$('#brandBtn').title = '영화제 기간 설정';
 	}
 	$('#festBtn').hidden = !start;
-	$('#meBtn').textContent = state.me ? `${state.me} 님` : '이름 설정';
 	document.querySelectorAll('[data-tab]').forEach(b => b.setAttribute('aria-selected', b.dataset.tab === state.tab));
 	$('#calView').hidden = state.tab !== 'cal';
 	$('#fab').hidden = state.tab !== 'cal';
@@ -959,7 +955,6 @@ $('#q').addEventListener('input', e => { state.q = e.target.value; renderGrid();
 document.querySelectorAll('[data-filter]').forEach(b => b.onclick = () => { const t = b.dataset.filter; state.hiddenTypes.has(t) ? state.hiddenTypes.delete(t) : state.hiddenTypes.add(t); renderFilters(); renderGrid(); renderDayPanel(); });
 $('#clsFilter').addEventListener('change', e => { state.cls = e.target.value; renderGrid(); renderDayPanel(); });
 $('#weekendToggle').addEventListener('change', e => { state.weekend = e.target.checked; store.set('ff-weekend', state.weekend ? '1' : '0'); renderGrid(); });
-$('#meBtn').onclick = () => askName();
 $('#settingsBtn').onclick = () => editSettings();
 $('#fab').onclick = () => openEditor(state.day || ymd(new Date()));
 const isMobile = () => matchMedia('(max-width:760px)').matches;
@@ -992,13 +987,6 @@ function modal(html, onSubmit){
 	form.querySelector('input')?.focus();
 	form.addEventListener('click', e => e.target.closest('[data-act=cancel]') && (root.innerHTML = ''));
 	form.addEventListener('submit', async e => { e.preventDefault(); if (await onSubmit(new FormData(form)) !== false) root.innerHTML = ''; });
-}
-
-function askName(){
-	modal(`<header><div><h2>어떤 이름으로 표시할까요?</h2><p>일정을 올리거나 진도를 체크하면 함께 기록돼요.</p></div></header>
-		<div class="field"><label for="m-name">이름</label><input id="m-name" name="name" maxlength="16" value="${esc(state.me)}" placeholder="예: 김하늘 선생님"></div>
-		<footer><button type="button" data-act="cancel">나중에</button><button class="primary">확인</button></footer>`,
-	f => { const n = String(f.get('name') || '').trim(); if (!n) return false; state.me = n; store.set('ff-name', n); state.sayPresence?.(); renderHeader(); });
 }
 
 function editSettings(){
