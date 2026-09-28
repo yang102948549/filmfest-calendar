@@ -373,7 +373,9 @@ table.pt{border-collapse:separate;border-spacing:0;min-width:100%;font-size:15px
 	.lessons.editing textarea{height:auto;field-sizing:content;max-height:120px;color:var(--ink-2)}
 	.lessons.editing .del{padding:5px}
 	.lessons.editing .del svg{width:15px;height:15px}
-	.lesson-actions{gap:6px}
+	/* 차시 추가는 오른쪽 아래 + 버튼으로. 취소·저장은 화면 아래에 붙어 있음 (+ 버튼 자리만큼 비워 둠) */
+	.lesson-actions{gap:6px;position:sticky;bottom:0;margin:10px -12px 0;padding:10px 70px calc(10px + env(safe-area-inset-bottom,0px)) 12px;background:var(--panel);border-top:1px solid var(--line)}
+	.lesson-actions .add{display:none}
 
 	.overlay{padding:0;align-items:flex-end}
 	.modal{width:100%;max-height:90dvh;border-radius:16px 16px 0 0;padding:14px 14px calc(12px + env(safe-area-inset-bottom,0px))}
@@ -692,7 +694,7 @@ function renderHeader(){
 	$('#festBtn').hidden = !start;
 	document.querySelectorAll('[data-tab]').forEach(b => b.setAttribute('aria-selected', b.dataset.tab === state.tab));
 	$('#calView').hidden = state.tab !== 'cal';
-	$('#fab').hidden = state.tab !== 'cal';
+	$('#fab').setAttribute('aria-label', state.tab === 'cal' ? '일정 추가' : '차시 추가');
 	$('#progView').hidden = state.tab !== 'prog';
 }
 
@@ -1023,7 +1025,16 @@ document.querySelectorAll('[data-filter]').forEach(b => b.onclick = () => { cons
 $('#clsFilter').addEventListener('change', e => { state.cls = e.target.value; renderGrid(); renderDayPanel(); });
 $('#weekendToggle').addEventListener('change', e => { state.weekend = e.target.checked; store.set('ff-weekend', state.weekend ? '1' : '0'); renderGrid(); });
 $('#settingsBtn').onclick = () => editSettings();
-$('#fab').onclick = () => openEditor(state.day || ymd(new Date()));
+// 모바일 + 버튼: 달력에서는 일정 추가, 진도표에서는 차시 추가(편집 중이 아니면 편집을 열고 빈 차시를 붙임)
+$('#fab').onclick = () => state.tab === 'cal' ? openEditor(state.day || ymd(new Date())) : addLesson();
+function addLesson(){
+	state.lessonDraft ||= lessons();
+	state.lessonDraft.push({title:'', detail:''});
+	renderLessons();
+	const input = document.querySelector(`[data-li="${state.lessonDraft.length - 1}"]`);
+	input?.scrollIntoView({block:'center', behavior:'smooth'});
+	input?.focus({preventScroll:true});
+}
 const isMobile = () => matchMedia('(max-width:760px)').matches;
 $('#brandBtn').onclick = () => editSettings();
 
@@ -1033,7 +1044,7 @@ $('#lessonPanel').addEventListener('click', async e => {
 	const act = b.dataset.act;
 	if (act === 'edit-lessons') { state.lessonDraft = lessons(); if (!state.lessonDraft.length) state.lessonDraft.push({title:'', detail:''}); return renderLessons(); }
 	if (act === 'cancel-lessons') { state.lessonDraft = null; return renderLessons(); }
-	if (act === 'add-lesson') { state.lessonDraft.push({title:'', detail:''}); renderLessons(); return document.querySelector(`[data-li="${state.lessonDraft.length - 1}"]`)?.focus(); }
+	if (act === 'add-lesson') return addLesson();
 	if (act === 'del-lesson') {
 		// 이미 일정·진도에 쓰인 차시는 한 번 더 눌러야 지워짐 (뒤 차시 번호가 하나씩 당겨짐)
 		if (b.dataset.used === 'true' && !b.classList.contains('armed')) {
