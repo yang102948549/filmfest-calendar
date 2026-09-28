@@ -1,0 +1,51 @@
+rules_version = '2';
+
+// 영화제 운영 캘린더: 로그인 없이 누구나 읽고 쓸 수 있는 공유 달력.
+// 컬렉션 이름과 필드 형태만 검사해서 엉뚱한 데이터가 들어오지 않게 막는다.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function validEvent(d) {
+      return d.keys().hasOnly(['type', 'title', 'date', 'periods', 'classes', 'sessions', 'note', 'todo', 'done', 'by', 'at'])
+        && (!('todo' in d) || d.todo is bool)
+        && (!('done' in d) || d.done is bool)
+        && d.type in ['event', 'subject', 'ext']
+        && d.title is string && d.title.size() <= 80
+        && d.date is string && d.date.matches('^\\d{4}-\\d{2}-\\d{2}$')
+        && d.periods is list && d.periods.size() <= 10
+        && (d.classes == 'all' || (d.classes is list && d.classes.size() <= 40))
+        && d.sessions is map
+        && d.note is string && d.note.size() <= 1000
+        && d.by is string && d.by.size() <= 40
+        && d.at is number;
+    }
+
+    function validProgress(d) {
+      return d.keys().hasOnly(['cls', 'done', 'dates', 'by', 'at'])
+        && d.cls is string && d.cls.size() <= 20
+        && d.done is int && d.done >= 0 && d.done <= 60
+        && d.dates is map;
+    }
+
+    function validSettings(d) {
+      return d.keys().hasOnly(['name', 'start', 'end', 'classes', 'lessons', 'periods'])
+        && d.name is string && d.name.size() <= 40
+        && d.classes is list && d.classes.size() <= 40
+        && d.lessons is list && d.lessons.size() <= 60
+        && d.periods is int && d.periods >= 1 && d.periods <= 10;
+    }
+
+    match /filmfest_events/{id} {
+      allow read, delete: if true;
+      allow create, update: if validEvent(request.resource.data);
+    }
+    match /filmfest_progress/{id} {
+      allow read: if true;
+      allow create, update: if validProgress(request.resource.data);
+    }
+    match /filmfest_settings/{id} {
+      allow read: if true;
+      allow create, update: if id == 'festival' && validSettings(request.resource.data);
+    }
+  }
+}
