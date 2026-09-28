@@ -179,10 +179,10 @@ svg{flex-shrink:0}
 .modal footer button{min-width:84px}
 .modal footer .danger{color:var(--danger);margin-right:auto;border-color:transparent;background:transparent}
 .modal footer .danger.armed{background:var(--danger-soft)}
-/* 종류 선택: 회색 트랙 위 세 칸. 칸마다 종류 색 점, 고른 칸은 흰 카드가 올라오고 글자가 그 종류 색 */
+/* 종류 선택: 회색 트랙 위 세 칸. 칸 위쪽에 종류 색 라인, 고른 칸은 흰 카드가 올라오고 라인·글자가 그 종류 색 */
 .segmented{display:grid;grid-template-columns:repeat(3,1fr);background:var(--hover);border:1px solid var(--line);padding:3px;border-radius:10px;margin-bottom:20px;gap:3px}
-.segmented button{border:0;background:none;color:var(--ink-2);font-size:15px;font-weight:600;padding:8px 6px;border-radius:7px;gap:6px}
-.segmented button::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--c);opacity:.55;flex-shrink:0}
+.segmented button{position:relative;border:0;background:none;color:var(--ink-2);font-size:15px;font-weight:600;padding:11px 6px 8px;border-radius:7px}
+.segmented button::before{content:"";position:absolute;top:3px;left:50%;width:28px;height:3px;margin-left:-14px;border-radius:3px;background:var(--c);opacity:.5}
 .segmented button[data-type="event"]{--c:var(--ev-fg)}
 .segmented button[data-type="subject"]{--c:var(--sub-fg)}
 .segmented button[data-type="ext"]{--c:var(--ext-fg)}
@@ -330,38 +330,49 @@ table.pt{border-collapse:separate;border-spacing:0;min-width:100%;font-size:15px
 	.prog-panel{border:0;border-radius:0;box-shadow:none;flex:none}
 	#progView{flex-direction:column;overflow-y:auto}
 	.lesson-panel{width:auto;overflow:visible;border-radius:0;border-left:0;border-right:0;box-shadow:none}
-	.prog-head{padding:14px 12px 10px}
-	.stats{gap:18px}
-	.stats b{font-size:18px}
-	.legend{padding:0 12px 10px}
+	/* 진도표: 한 화면에 더 많은 칸이 보이게 촘촘하게 */
+	.prog-head{padding:12px 12px 8px;gap:10px}
+	.prog-head h2{font-size:17px}
+	.prog-head p{font-size:12px;margin-top:2px}
+	.prog-head .hint,.legend .hint{display:none}
+	.stats{width:100%;display:grid;grid-template-columns:repeat(3,1fr);gap:6px;background:var(--panel-2);border:1px solid var(--grid);border-radius:10px;padding:8px 10px}
+	.stats small{font-size:11px}
+	.stats b{font-size:15px;letter-spacing:-.3px}
+	.legend{font-size:11px;gap:12px;padding:0 12px 8px}
+	.legend span{gap:4px}
+	.legend i{width:11px;height:11px;border-radius:3px}
 	.tablewrap{max-height:none}
-	/* 진도표·차시 구성: 모바일 글자 크기 */
-	.prog-head h2{font-size:19px}
-	.prog-head p,.legend{font-size:12px}
-	.stats small{font-size:12px}
-	table.pt{font-size:13px}
-	.pt thead th{min-width:78px;padding:8px 4px}
-	.pt thead th b,.pt thead th small{font-size:12px}
-	.pt .cn{min-width:120px;padding:6px 10px}
-	.pt .cn b{font-size:15px}
-	.pt .cn small{font-size:12px;max-width:120px}
-	.cell{min-height:44px;font-size:12px}
-	.cell small{font-size:11px}
-	.rate{min-width:120px;padding:6px 10px!important}
-	.rate small{font-size:12px}
-	.lesson-panel{padding:16px 12px}
-	.lesson-panel h3{font-size:17px}
-	.lesson-panel header p{font-size:13px}
-	.lesson-panel .small{font-size:14px;padding:6px 12px}
-	.lessons li{grid-template-columns:30px 1fr;gap:3px 8px;padding:9px 0}
-	.lessons .no{font-size:12px;height:22px;border-radius:6px}
-	.lessons .lt{font-size:15px}
-	.lessons .ld{font-size:13px}
-	.lessons.editing li{grid-template-columns:30px 1fr auto}
-	.lessons.editing input{min-height:38px;padding:6px 9px;font-size:16px}
-	.lessons.editing textarea{min-height:48px;padding:6px 9px;font-size:16px}
-	.lessons.editing .del{padding:6px}
-	.lessons.editing .del svg{width:16px;height:16px}
+	table.pt{font-size:12px}
+	.pt th,.pt td{padding:3px}
+	.pt thead th{min-width:62px;max-width:62px;padding:6px 3px}
+	.pt thead th b{font-size:11px}
+	.pt thead th small{font-size:10.5px;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}
+	.pt .cn{min-width:48px;padding:4px 8px}
+	.pt .cn b{font-size:14px}
+	.pt .cn small{display:none}
+	.cell{min-height:36px;padding:2px;font-size:11px;border-radius:7px;letter-spacing:-.3px}
+	.cell small{font-size:10px}
+	.rate{min-width:78px;padding:4px 8px!important}
+	.bar{height:6px}
+	.rate small{font-size:11px;margin-top:3px}
+	/* 차시 구성 */
+	.lesson-panel{padding:14px 12px;border-top:8px solid var(--bg)}
+	.lesson-panel h3{font-size:16px}
+	.lesson-panel header p{font-size:12px}
+	.lesson-panel .small{font-size:13px;padding:5px 10px;border-radius:8px}
+	.lesson-panel .small svg{width:13px;height:13px}
+	.lessons{margin-top:6px}
+	.lessons li{grid-template-columns:24px 1fr;gap:2px 8px;padding:8px 0}
+	.lessons .no{font-size:11px;height:20px;border-radius:5px}
+	.lessons .lt{font-size:14px;line-height:1.4}
+	.lessons .ld{font-size:12px;line-height:1.45}
+	/* 차시 편집: 활동명·세부 내용을 한 줄 높이로 (글자 16px은 iPhone 확대 방지) */
+	.lessons.editing li{grid-template-columns:24px 1fr auto;gap:4px 6px;padding:7px 0}
+	.lessons.editing .no{margin-top:7px}
+	.lessons.editing input,.lessons.editing textarea{min-height:34px;padding:5px 8px;font-size:16px;border-radius:7px;line-height:1.4}
+	.lessons.editing textarea{height:auto;field-sizing:content;max-height:120px;color:var(--ink-2)}
+	.lessons.editing .del{padding:5px}
+	.lessons.editing .del svg{width:15px;height:15px}
 	.lesson-actions{gap:6px}
 
 	.overlay{padding:0;align-items:flex-end}
@@ -371,8 +382,8 @@ table.pt{border-collapse:separate;border-spacing:0;min-width:100%;font-size:15px
 	.modal header p{font-size:13px;margin-top:1px}
 	.modal header .icon{padding:4px}
 	.segmented{margin-bottom:14px}
-	.segmented button{font-size:13px;padding:6px 2px;gap:4px}
-	.segmented button::before{width:6px;height:6px}
+	.segmented button{font-size:13px;padding:9px 2px 6px}
+	.segmented button::before{width:22px;margin-left:-11px;height:2.5px}
 	.field{gap:6px;margin-bottom:14px}
 	.field>span,.field>label{font-size:13px}
 	.field>span em,.field>label em{font-size:12px}
@@ -769,9 +780,9 @@ function renderProgress(){
 	state.events.forEach(e => { if (typeOf(e) === 'ext') classesOf(e).forEach(c => { const n = e.sessions?.[c]; if (n) (plan[c] ||= {})[n] = e.date; }); });
 	const avg = Math.round(C.reduce((a, c) => a + Math.min(doneOf(c), L.length), 0) / (C.length * L.length) * 100);
 	const slow = C.reduce((a, c) => doneOf(c) < doneOf(a) ? c : a, C[0]);
-	root.innerHTML = `<div class="prog-head"><div><h2>외부강사 진도표</h2><p>차시 활동은 순서대로만 진행해요. 점선 칸(다음 차례)만 체크할 수 있어요.</p></div>
+	root.innerHTML = `<div class="prog-head"><div><h2>외부강사 진도표</h2><p>차시는 순서대로만 진행해요. <span class="hint">점선 칸(다음 차례)만 체크할 수 있어요.</span></p></div>
 		<div class="stats"><div><small>평균 진도율</small><b>${avg}%</b></div><div><small>모두 마친 학급</small><b>${C.filter(c => doneOf(c) >= L.length).length} / ${C.length}</b></div><div><small>가장 늦은 학급</small><b>${esc(slow)} · ${doneOf(slow)}차시</b></div></div></div>
-		<div class="legend"><span><i style="background:var(--ext-solid)"></i>완료 (마지막 칸을 누르면 취소)</span><span><i style="border:1.5px dashed var(--ext-solid)"></i>다음 차례</span><span><i style="background:var(--panel-2);border:1px solid var(--line)"></i>대기 · 예정일</span></div>
+		<div class="legend"><span><i style="background:var(--ext-solid)"></i>완료<span class="hint"> (마지막 칸을 누르면 취소)</span></span><span><i style="border:1.5px dashed var(--ext-solid)"></i>다음 차례</span><span><i style="background:var(--panel-2);border:1px solid var(--line)"></i>대기 · 예정일</span></div>
 		<div class="tablewrap"><table class="pt"><thead><tr><th class="cn">학급</th>${L.map((l, i) => `<th title="${esc(l.detail)}"><b>${i+1}차시</b><small>${esc(l.title)}</small></th>`).join('')}<th class="rate">진도율</th></tr></thead><tbody>
 		${C.map(c => {
 			const done = Math.min(doneOf(c), L.length), dates = state.progress[c]?.dates || {};
@@ -802,7 +813,7 @@ function renderLessons(){
 		${draft ? '' : `<button class="small" data-act="edit-lessons">편집</button>`}</header>
 		${!L.length && !draft ? '<p class="muted" style="margin-top:12px">아직 등록된 차시가 없어요. 편집을 눌러 추가해 주세요.</p>' : ''}
 		<ol class="lessons${draft ? ' editing' : ''}">${L.map((l, i) => draft
-			? `<li><span class="no">${i+1}</span><input data-li="${i}" data-k="title" value="${esc(l.title)}" placeholder="활동명" aria-label="${i+1}차시 활동명"><button class="icon del" data-act="del-lesson" data-i="${i}" data-used="${i < used}" aria-label="${i+1}차시 삭제" title="삭제">${CLOSE}</button><textarea data-li="${i}" data-k="detail" placeholder="세부 내용 (선택)" aria-label="${i+1}차시 세부 내용">${esc(l.detail)}</textarea></li>`
+			? `<li><span class="no">${i+1}</span><input data-li="${i}" data-k="title" value="${esc(l.title)}" placeholder="활동명" aria-label="${i+1}차시 활동명"><button class="icon del" data-act="del-lesson" data-i="${i}" data-used="${i < used}" aria-label="${i+1}차시 삭제" title="삭제">${CLOSE}</button><textarea rows="1" data-li="${i}" data-k="detail" placeholder="세부 내용 (선택)" aria-label="${i+1}차시 세부 내용">${esc(l.detail)}</textarea></li>`
 			: `<li><span class="no">${i+1}</span><span class="lt">${esc(l.title)}</span>${l.detail ? `<span class="ld">${esc(l.detail)}</span>` : ''}</li>`).join('')}</ol>
 		${draft ? `<p class="err" id="lessonErr" hidden></p><div class="lesson-actions"><button class="small add" data-act="add-lesson">${PLUS}차시 추가</button><button class="small" data-act="cancel-lessons">취소</button><button class="small primary" data-act="save-lessons">저장</button></div>` : ''}`;
 }
