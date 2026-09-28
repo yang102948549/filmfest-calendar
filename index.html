@@ -179,16 +179,14 @@ svg{flex-shrink:0}
 .modal footer button{min-width:84px}
 .modal footer .danger{color:var(--danger);margin-right:auto;border-color:transparent;background:transparent}
 .modal footer .danger.armed{background:var(--danger-soft)}
-/* 종류 선택: 회색 트랙 위 세 칸. 칸 위쪽에 종류 색 라인, 고른 칸은 흰 카드가 올라오고 라인·글자가 그 종류 색 */
-.segmented{display:grid;grid-template-columns:repeat(3,1fr);background:var(--hover);border:1px solid var(--line);padding:3px;border-radius:10px;margin-bottom:20px;gap:3px}
-.segmented button{position:relative;border:0;background:none;color:var(--ink-2);font-size:15px;font-weight:600;padding:11px 6px 8px;border-radius:7px}
-.segmented button::before{content:"";position:absolute;top:3px;left:50%;width:28px;height:3px;margin-left:-14px;border-radius:3px;background:var(--c);opacity:.5}
-.segmented button[data-type="event"]{--c:var(--ev-fg)}
-.segmented button[data-type="subject"]{--c:var(--sub-fg)}
-.segmented button[data-type="ext"]{--c:var(--ext-fg)}
-.segmented button:hover:not([aria-pressed="true"]){background:#ffffff99;color:var(--ink)}
-.segmented button[aria-pressed="true"],.segmented button[aria-pressed="true"]:hover{background:var(--panel);color:var(--c);font-weight:700;box-shadow:0 1px 3px #0000001f,0 0 0 1px #0000000a}
-.segmented button[aria-pressed="true"]::before{opacity:1}
+/* 종류 선택: 종류별 색을 옅게 깐 알약 세 개. 고른 것만 그 색으로 채움 */
+.segmented{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:20px}
+.segmented button{--tint:color-mix(in srgb,var(--c) 7%,#fff);border:1px solid color-mix(in srgb,var(--c) 22%,#fff);background:var(--tint);color:color-mix(in srgb,var(--c) 82%,#1c1c1e);font-size:14px;font-weight:600;padding:9px 6px;border-radius:999px;transition:background .15s,color .15s,box-shadow .15s,border-color .15s}
+.segmented button[data-type="event"]{--c:#4c6ef5}
+.segmented button[data-type="subject"]{--c:#2f9e7a}
+.segmented button[data-type="ext"]{--c:#e8645a}
+.segmented button:hover:not([aria-pressed="true"]){background:color-mix(in srgb,var(--c) 13%,#fff);border-color:color-mix(in srgb,var(--c) 38%,#fff)}
+.segmented button[aria-pressed="true"],.segmented button[aria-pressed="true"]:hover{background:var(--c);border-color:var(--c);color:#fff;box-shadow:0 4px 14px -4px color-mix(in srgb,var(--c) 70%,transparent)}
 .field{display:flex;flex-direction:column;gap:9px;margin-bottom:20px}
 .field>span,.field>label{font-size:15px;font-weight:600;color:var(--ink-2)}
 .field>span em,.field>label em{font-style:normal;font-weight:500;color:var(--muted);margin-left:6px}
@@ -381,9 +379,8 @@ table.pt{border-collapse:separate;border-spacing:0;min-width:100%;font-size:15px
 	.modal h2{font-size:17px}
 	.modal header p{font-size:13px;margin-top:1px}
 	.modal header .icon{padding:4px}
-	.segmented{margin-bottom:14px}
-	.segmented button{font-size:13px;padding:9px 2px 6px}
-	.segmented button::before{width:22px;margin-left:-11px;height:2.5px}
+	.segmented{margin-bottom:14px;gap:6px}
+	.segmented button{font-size:13px;padding:7px 2px}
 	.field{gap:6px;margin-bottom:14px}
 	.field>span,.field>label{font-size:13px}
 	.field>span em,.field>label em{font-size:12px}
