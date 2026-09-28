@@ -133,7 +133,7 @@ svg{flex-shrink:0}
 .day-heading{display:flex;align-items:center;gap:6px;height:32px;margin-bottom:8px;flex-shrink:0}
 .date-number{border:0;background:none;padding:0;width:32px;height:32px;border-radius:9px;font-size:18px;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums}
 .sun .date-number{color:var(--sun)}
-.date-number.today{background:var(--blue);color:#fff}
+.day .date-number.today{background:var(--blue);color:#fff;font-weight:700}
 .day-heading small{font-size:14px;color:var(--blue-ink);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .day-heading small.fest-tag{color:var(--fest-ink);font-weight:500}
 .day-add{border:0;background:var(--blue-soft);color:var(--blue-ink);padding:5px;border-radius:8px;margin-left:auto}
@@ -280,27 +280,74 @@ table.pt{border-collapse:separate;border-spacing:0;min-width:100%;font-size:15px
 .toast button{border:0;background:none;color:#8cc2ff;font-weight:700;font-size:15px;padding:0}
 
 @media (max-width:1200px){.day-panel,.lesson-panel{width:340px}.search{width:130px}.live span{display:none}}
+.fab,.more-m{display:none}
+
+/* ── 모바일: 구글 캘린더처럼 달력이 화면을 채우고, 날짜를 누르면 아래에서 그날 일정이 올라옴 ── */
 @media (max-width:760px){
-	.topbar{padding:10px 16px;flex-wrap:wrap}
-	.tabs button{min-width:0;padding:7px 12px}
+	body{font-size:15px}
+	.topbar{min-height:0;padding:8px 12px;gap:8px}
+	.top-left{gap:10px;flex:1;justify-content:space-between}
+	.brand{padding:2px}
+	.brand-mark{width:32px;height:32px}
 	.brand-text small{display:none}
-	.me{display:none}
-	.page{flex-direction:column;padding:12px 16px;overflow-y:auto}
-	.calendar-panel,.prog-panel{flex:none}
-	.month-scroll{overflow:visible}
-	.month-grid{grid-auto-rows:minmax(84px,auto)}
-	.day{padding:5px 3px}
-	.day-heading small{display:none}
-	.day .entry,.day .entry:hover{padding:0;height:7px;border-radius:3px;background:var(--dot,var(--blue))}
-	.day .entry>*,.day .task,.day .trash{display:none}
-	.day-panel,.lesson-panel{width:auto;overflow:visible}
-	.toolbar h2{font-size:22px}
-	.search{width:100%}
-	.toolbar>div:last-child{width:100%}
-	.calendar-footer>span:last-child{display:none}
-	.tablewrap{max-height:70vh}
-	.modal{padding:20px}
-	.cgrid{grid-template-columns:repeat(4,1fr)}
+	.brand-text b{font-size:16px}
+	.tabs button{min-width:0;padding:6px 12px;font-size:15px}
+	.live,.peers,.me{display:none}
+	.top-right{gap:0}
+
+	.page{padding:0;gap:0}
+	.calendar-panel{border:0;border-radius:0;box-shadow:none}
+	.toolbar{padding:10px 12px 8px;flex-wrap:nowrap}
+	.toolbar>div:first-child{flex-wrap:nowrap;gap:2px}
+	.toolbar>div:last-child,#festBtn,.weekend-toggle,.calendar-footer{display:none}
+	.toolbar h2{font-size:21px;margin-right:6px}
+	.toolbar .icon{padding:6px}
+
+	.weekdays span{font-size:12px;padding:6px 0}
+	.month-scroll{overflow-y:auto}
+	.month-grid{grid-auto-rows:minmax(max(92px,calc((100dvh - 150px) / var(--weeks,5))),auto)}
+	.day{padding:3px 2px 4px}
+	.day-heading{height:24px;margin-bottom:2px;justify-content:center}
+	.date-number{width:24px;height:24px;font-size:13px;border-radius:50%}
+	.day-heading small,.day-add{display:none}
+	.day-content{gap:2px}
+	/* 일정은 색 막대 한 줄: 교과·외부는 학급, 학교 일정은 제목 */
+	.day .row-wrap{display:block}
+	.day .row-wrap:nth-child(n+4){display:none}
+	.day .entry,.day .entry:hover{display:block;padding:1px 3px;border-radius:4px;font-size:11px;font-weight:600;line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-.3px}
+	.day .entry.k-event{background:var(--ev-bg);color:var(--ev-fg)}
+	.day .entry.k-subject{background:var(--sub-bg);color:var(--sub-fg)}
+	.day .entry.k-ext{background:var(--ext-bg);color:var(--ext-fg)}
+	.day .row-wrap.todo .entry{background:none;color:var(--ink-2);box-shadow:inset 0 0 0 1px var(--line)}
+	.day .entry .row-chip,.day .entry .sub,.day .entry .note-mark,.day .task,.day .trash{display:none}
+	.day .entry .cls,.day .entry .entry-title{display:inline;font-size:11px;font-weight:600;color:inherit}
+	.day .entry .cls+.entry-title::before{content:" "}
+	.more-m{display:block;font-size:10px;color:var(--muted);padding-left:3px;font-weight:600}
+
+	/* 날짜를 누르면 아래에서 올라오는 그날 일정 */
+	.day-panel{position:fixed;left:0;right:0;bottom:0;z-index:60;width:auto;max-height:62dvh;border-radius:18px 18px 0 0;border:0;box-shadow:0 -10px 40px #1d2d4a33;padding:16px 16px calc(20px + env(safe-area-inset-bottom,0px))}
+	.day-panel h2{font-size:20px}
+	.day-panel .trash{visibility:visible}
+	.day-panel .overline{margin:14px 0 8px}
+	.sheet-open .fab{display:none}
+	.fab{display:grid;place-items:center;position:fixed;right:16px;bottom:calc(20px + env(safe-area-inset-bottom,0px));z-index:50;width:56px;height:56px;border-radius:18px;border:0;background:var(--blue);color:#fff;box-shadow:0 6px 20px #007aff55;padding:0}
+
+	.prog-panel{border:0;border-radius:0;box-shadow:none;flex:none}
+	#progView{flex-direction:column;overflow-y:auto}
+	.lesson-panel{width:auto;overflow:visible;border-radius:0;border-left:0;border-right:0;box-shadow:none}
+	.prog-head{padding:14px 12px 10px}
+	.stats{gap:18px}
+	.stats b{font-size:18px}
+	.legend{padding:0 12px 10px}
+	.tablewrap{max-height:none}
+
+	.overlay{padding:0;align-items:flex-end}
+	.modal{width:100%;max-height:92dvh;border-radius:20px 20px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom,0px))}
+	.modal h2{font-size:21px}
+	.segmented button{font-size:15px;padding:9px 4px}
+	.pgrid{grid-template-columns:repeat(4,1fr)}
+	.pill{font-size:15px;padding:9px 4px}
+	.toast{bottom:calc(88px + env(safe-area-inset-bottom,0px))}
 }
 </style>
 
@@ -358,6 +405,7 @@ table.pt{border-collapse:separate;border-spacing:0;min-width:100%;font-size:15px
 		<aside class="lesson-panel panel" id="lessonPanel" aria-label="차시 구성"></aside>
 	</div>
 </div>
+<button class="fab" id="fab" aria-label="일정 추가"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
 <div class="hovercard" id="hover" hidden></div>
 <div id="modalRoot"></div>
 
@@ -602,6 +650,7 @@ function renderHeader(){
 	$('#meBtn').textContent = state.me ? `${state.me} 님` : '이름 설정';
 	document.querySelectorAll('[data-tab]').forEach(b => b.setAttribute('aria-selected', b.dataset.tab === state.tab));
 	$('#calView').hidden = state.tab !== 'cal';
+	$('#fab').hidden = state.tab !== 'cal';
 	$('#progView').hidden = state.tab !== 'prog';
 }
 
@@ -627,7 +676,7 @@ function entryRow(e){
 		? `<button class="task" data-todo="${e.id}" aria-label="${esc(titleOf(e))} ${e.done ? '완료 취소' : '완료'}" aria-pressed="${!!e.done}"><span class="task-box${e.done ? ' on' : ''}">${e.done ? CHECK : ''}</span></button>`
 		: '';
 	const chip = e.todo ? (e.periods?.length ? `<span class="sub">${periodLabel(e.periods)}</span>` : '') : `<span class="row-chip t-${t}">${chipText(e)}</span>`;
-	return `<div class="row-wrap${e.todo ? ' todo' : ''}${e.done ? ' done' : ''}">${lead}<button class="entry" data-id="${e.id}" style="--dot:var(--${t === 'event' ? 'ev-fg' : t === 'ext' ? 'ext-solid' : 'sub-fg'})" aria-label="${esc(`${TYPES[t].name} ${chipText(e)} ${cls} ${titleOf(e)} 수정`)}">${chip}${body}${e.note ? NOTE_ICON : ''}</button><button class="trash" data-del="${e.id}" aria-label="${esc(titleOf(e))} 삭제" title="삭제">${TRASH}</button></div>`;
+	return `<div class="row-wrap${e.todo ? ' todo' : ''}${e.done ? ' done' : ''}">${lead}<button class="entry k-${t}" data-id="${e.id}" style="--dot:var(--${t === 'event' ? 'ev-fg' : t === 'ext' ? 'ext-solid' : 'sub-fg'})" aria-label="${esc(`${TYPES[t].name} ${chipText(e)} ${cls} ${titleOf(e)} 수정`)}">${chip}${body}${e.note ? NOTE_ICON : ''}</button><button class="trash" data-del="${e.id}" aria-label="${esc(titleOf(e))} 삭제" title="삭제">${TRASH}</button></div>`;
 }
 
 function renderGrid(){
@@ -648,10 +697,11 @@ function renderGrid(){
 		const cls = ['day', (wd === 0 || wd === 6) && 'wkend', wd === 0 && 'sun', d.getMonth() !== m && 'out', key === state.day && 'selected', inFest(key) && 'fest', (i + 1) % cols.length === 0 && 'edge'].filter(Boolean).join(' ');
 		return `<div class="${cls}" data-date="${key}">
 			<div class="day-heading"><button class="date-number${key === today ? ' today' : ''}" data-open="${key}" aria-label="${longDate(key)} 일정 보기">${d.getDate()}</button>${key === today ? '<small>오늘</small>' : inFest(key) ? `<small class="fest-tag">영화제 ${festDay(key)}일차</small>` : ''}<button class="day-add" data-add="${key}" aria-label="${longDate(key)} 일정 추가" title="일정 추가">${PLUS}</button></div>
-			<div class="day-content">${list.map(entryRow).join('')}</div>
+			<div class="day-content">${list.map(entryRow).join('')}${list.length > 3 ? `<span class="more-m">+${list.length - 3}</span>` : ''}</div>
 		</div>`;
 	}).join('');
 	$('#grid').style.setProperty('--cols', cols.length);
+	$('#grid').style.setProperty('--weeks', days.length / cols.length);
 	$('#weekdays').style.setProperty('--cols', cols.length);
 }
 
@@ -665,6 +715,7 @@ function progressButton(c, n){
 
 function renderDayPanel(){
 	const panel = $('#dayPanel');
+	document.body.classList.toggle('sheet-open', !!state.day);
 	if (!state.day) { panel.hidden = true; return; }
 	panel.hidden = false;
 	const d = parse(state.day), list = visibleEvents().filter(e => e.date === state.day).sort(byTime);
@@ -911,11 +962,12 @@ function openDay(date){
 	const d = parse(date);
 	if (d.getMonth() !== state.view.getMonth() || d.getFullYear() !== state.view.getFullYear()) state.view = new Date(d.getFullYear(), d.getMonth(), 1);
 	renderGrid(); renderDayPanel();
-	if (innerWidth <= 760) $('#dayPanel').scrollIntoView();
 }
 
 document.querySelector('.top-left nav').addEventListener('click', e => { const b = e.target.closest('[data-tab]'); if (!b) return; state.tab = b.dataset.tab; hideHover(); renderHeader(); renderData(); });
 $('#calView').addEventListener('click', e => {
+	// 모바일은 칸이 작아서 달력 안 어디를 눌러도 그날 일정 패널(아래에서 올라옴)을 연다
+	if (isMobile() && e.target.closest('.day')) return openDay(e.target.closest('.day').dataset.date);
 	const add = e.target.closest('[data-add]'); if (add) return openEditor(add.dataset.add);
 	const entry = e.target.closest('.entry'); if (entry) { const ev = state.events.get(entry.dataset.id); return ev && openEditor(ev.date, ev.id); }
 	if (e.target.closest('[data-act=close-day]')) { state.day = null; renderGrid(); return renderDayPanel(); }
@@ -932,6 +984,8 @@ $('#clsFilter').addEventListener('change', e => { state.cls = e.target.value; re
 $('#weekendToggle').addEventListener('change', e => { state.weekend = e.target.checked; store.set('ff-weekend', state.weekend ? '1' : '0'); renderGrid(); });
 $('#meBtn').onclick = () => askName();
 $('#settingsBtn').onclick = () => editSettings();
+$('#fab').onclick = () => openEditor(state.day || ymd(new Date()));
+const isMobile = () => matchMedia('(max-width:760px)').matches;
 $('#brandBtn').onclick = () => editSettings();
 
 $('#lessonPanel').addEventListener('input', e => { const i = e.target.dataset.li; if (i != null && state.lessonDraft) state.lessonDraft[i][e.target.dataset.k] = e.target.value; });
