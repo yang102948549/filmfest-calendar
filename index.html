@@ -179,16 +179,16 @@ svg{flex-shrink:0}
 .modal footer button{min-width:84px}
 .modal footer .danger{color:var(--danger);margin-right:auto;border-color:transparent;background:transparent}
 .modal footer .danger.armed{background:var(--danger-soft)}
-/* 종류 선택: 회색 트랙 위 세 칸. 칸 위쪽에 종류 색 라인, 고른 칸은 흰 카드가 올라오고 라인·글자가 그 종류 색 */
-.segmented{display:grid;grid-template-columns:repeat(3,1fr);background:var(--hover);border:1px solid var(--line);padding:3px;border-radius:10px;margin-bottom:20px;gap:3px}
-.segmented button{position:relative;border:0;background:none;color:var(--ink-2);font-size:15px;font-weight:600;padding:11px 6px 8px;border-radius:7px}
-.segmented button::before{content:"";position:absolute;top:3px;left:50%;width:28px;height:3px;margin-left:-14px;border-radius:3px;background:var(--c);opacity:.5}
-.segmented button[data-type="event"]{--c:var(--ev-fg)}
-.segmented button[data-type="subject"]{--c:var(--sub-fg)}
-.segmented button[data-type="ext"]{--c:var(--ext-fg)}
-.segmented button:hover:not([aria-pressed="true"]){background:#ffffff99;color:var(--ink)}
-.segmented button[aria-pressed="true"],.segmented button[aria-pressed="true"]:hover{background:var(--panel);color:var(--c);font-weight:700;box-shadow:0 1px 3px #0000001f,0 0 0 1px #0000000a}
-.segmented button[aria-pressed="true"]::before{opacity:1}
+/* 종류 선택: 종류별 색을 옅게 깐 알약 세 개. 고른 것만 그 색으로 채움 */
+.segmented{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:20px}
+.segmented button{--tint:color-mix(in srgb,var(--c) 7%,#fff);border:1px solid color-mix(in srgb,var(--c) 22%,#fff);background:var(--tint);color:color-mix(in srgb,var(--c) 82%,#1c1c1e);font-size:14px;font-weight:600;padding:9px 6px;border-radius:999px;gap:6px;transition:background .15s,color .15s,box-shadow .15s,border-color .15s}
+.segmented button svg{width:15px;height:15px;opacity:.85}
+.segmented button[data-type="event"]{--c:#4c6ef5}
+.segmented button[data-type="subject"]{--c:#2f9e7a}
+.segmented button[data-type="ext"]{--c:#e8645a}
+.segmented button:hover:not([aria-pressed="true"]){background:color-mix(in srgb,var(--c) 13%,#fff);border-color:color-mix(in srgb,var(--c) 38%,#fff)}
+.segmented button[aria-pressed="true"],.segmented button[aria-pressed="true"]:hover{background:var(--c);border-color:var(--c);color:#fff;box-shadow:0 4px 14px -4px color-mix(in srgb,var(--c) 70%,transparent)}
+.segmented button[aria-pressed="true"] svg{opacity:1}
 .field{display:flex;flex-direction:column;gap:9px;margin-bottom:20px}
 .field>span,.field>label{font-size:15px;font-weight:600;color:var(--ink-2)}
 .field>span em,.field>label em{font-style:normal;font-weight:500;color:var(--muted);margin-left:6px}
@@ -381,9 +381,9 @@ table.pt{border-collapse:separate;border-spacing:0;min-width:100%;font-size:15px
 	.modal h2{font-size:17px}
 	.modal header p{font-size:13px;margin-top:1px}
 	.modal header .icon{padding:4px}
-	.segmented{margin-bottom:14px}
-	.segmented button{font-size:13px;padding:9px 2px 6px}
-	.segmented button::before{width:22px;margin-left:-11px;height:2.5px}
+	.segmented{margin-bottom:14px;gap:6px}
+	.segmented button{font-size:13px;padding:7px 2px;gap:4px}
+	.segmented button svg{width:13px;height:13px}
 	.field{gap:6px;margin-bottom:14px}
 	.field>span,.field>label{font-size:13px}
 	.field>span em,.field>label em{font-size:12px}
@@ -477,6 +477,12 @@ const DEFAULT_CLASSES = Array.from({length:8}, (_, i) => `3-${i+1}`);
 const PALETTE = ['#007aff','#34a853','#af52de','#ff9500','#ff2d55','#5ac8fa','#5856d6'];
 const WD = ['일','월','화','수','목','금','토'];
 const NOTE_ICON = '<svg class="note-mark" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3Z"/><path d="M15 3v6h6"/></svg>';
+// 일정 종류 아이콘: 학교 일정(달력) · 교과 수업(책) · 외부 강사(사람)
+const TYPE_ICON = Object.fromEntries(Object.entries({
+	event: '<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+	subject: '<path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19V5M8 7h7"/>',
+	ext: '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
+}).map(([k, d]) => [k, `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`]));
 const PLUS = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>';
 const CHECK = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
 const TRASH = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6M10 11v6M14 11v6"/></svg>';
@@ -889,7 +895,7 @@ function renderEditor(focus){
 	$('#modalRoot').innerHTML = `<div class="overlay" data-act="backdrop"><div class="modal type-${t}" role="dialog" aria-modal="true" aria-labelledby="edTitle">
 		<header><div><h2 id="edTitle">${isNew ? '새 일정' : '일정 수정'}</h2><p>${longDate(ed.date)}</p></div><button class="icon" data-act="close" aria-label="닫기">${CLOSE}</button></header>
 		<form id="editor" novalidate>
-			<div class="segmented" role="group" aria-label="종류">${Object.entries(TYPES).map(([id, x]) => `<button type="button" data-type="${id}" aria-pressed="${t === id}">${x.name}</button>`).join('')}</div>
+			<div class="segmented" role="group" aria-label="종류">${Object.entries(TYPES).map(([id, x]) => `<button type="button" data-type="${id}" aria-pressed="${t === id}">${TYPE_ICON[id]}${x.name}</button>`).join('')}</div>
 			${t !== 'ext' ? `<div class="field"><label for="f-title">${t === 'event' ? '일정명' : '수업 내용'}</label><input id="f-title" data-k="title" value="${esc(ed.title)}" maxlength="80" placeholder="${t === 'event' ? '예: 영화제 안내 가정통신문 배부' : '예: 국어 · 영화 감상문 쓰기'}"></div>` : ''}
 			${t === 'event' ? `<label class="checkline"><input type="checkbox" id="f-todo"${ed.todo ? ' checked' : ''}>할 일로 등록</label>` : ''}
 			<div class="field"><span>교시<em>선택</em></span><div class="pgrid">${Array.from({length:P}, (_, i) => `<button type="button" class="pill" data-period="${i+1}" aria-pressed="${ed.periods.includes(i+1)}">${i+1}교시</button>`).join('')}</div></div>
