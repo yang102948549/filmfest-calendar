@@ -2,7 +2,7 @@
 <html lang="ko">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>영화제 운영 캘린더</title>
+<title>영화제 일정</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap">
@@ -15,6 +15,7 @@
 	--blue:#007aff;--blue-ink:#0063d1;--blue-soft:#e8f2ff;--blue-ring:#8cc2ff;
 	--sun:#d05d5d;--hover:#f4f8fe;--sel:#f6faff;
 	--fest:#f3f8ff;--fest-ink:#3b82e0;
+	--ev-bg:#e2edff;--ev-fg:#1f6fdc;
 	--sub-bg:#d8f1ea;--sub-fg:#1e7766;
 	--ext-bg:#fde4e2;--ext-fg:#c0433b;--ext-solid:#e8645c;
 	--danger:#d9443a;--danger-soft:#fdecea;
@@ -28,6 +29,7 @@
 	--blue:#0a84ff;--blue-ink:#5eaaff;--blue-soft:#12294a;--blue-ring:#1f5fb0;
 	--sun:#f08a8a;--hover:#1d2430;--sel:#18212e;
 	--fest:#141d2c;--fest-ink:#6aa8ff;
+	--ev-bg:#16304f;--ev-fg:#86bcff;
 	--sub-bg:#173a33;--sub-fg:#86dcc9;
 	--ext-bg:#3d2020;--ext-fg:#ff9d95;--ext-solid:#d9544c;
 	--danger:#ff6b61;--danger-soft:#3b1c1a;
@@ -39,6 +41,7 @@
 	--blue:#0a84ff;--blue-ink:#5eaaff;--blue-soft:#12294a;--blue-ring:#1f5fb0;
 	--sun:#f08a8a;--hover:#1d2430;--sel:#18212e;
 	--fest:#141d2c;--fest-ink:#6aa8ff;
+	--ev-bg:#16304f;--ev-fg:#86bcff;
 	--sub-bg:#173a33;--sub-fg:#86dcc9;
 	--ext-bg:#3d2020;--ext-fg:#ff9d95;--ext-solid:#d9544c;
 	--danger:#ff6b61;--danger-soft:#3b1c1a;
@@ -61,14 +64,14 @@ svg{flex-shrink:0}
 .primary{background:var(--blue);border-color:var(--blue);color:#fff;font-weight:600}
 .primary:hover:not(:disabled){background:var(--blue-ink);border-color:var(--blue-ink)}
 .icon{padding:8px;border:0;background:transparent;color:var(--ink-2)}
-.icon:hover:not(:disabled),.me:hover,.top-left nav button:hover{background:var(--hover)}
+.icon:hover:not(:disabled),.me:hover,.brand:hover{background:var(--hover)}
 .small{font-size:15px;padding:7px 14px}
 .muted{color:var(--muted);font-size:16px;line-height:1.7;margin:0}
 .overline{font-size:13px;letter-spacing:.4px;color:var(--muted);margin:22px 0 10px;font-weight:600}
 
 /* 칩 하나: 색 = 일정·교과·외부, 글자 = 교시 */
 .row-chip{display:inline-flex;align-items:center;border-radius:6px;padding:2px 7px;font-size:14px;font-weight:700;line-height:1.4;flex-shrink:0;white-space:nowrap;letter-spacing:0}
-.t-event{background:var(--blue);color:#fff}
+.t-event{background:var(--ev-bg);color:var(--ev-fg)}
 .t-subject{background:var(--sub-bg);color:var(--sub-fg)}
 .t-ext{background:var(--ext-bg);color:var(--ext-fg)}
 
@@ -77,13 +80,16 @@ svg{flex-shrink:0}
 .topbar{min-height:66px;display:flex;align-items:center;justify-content:space-between;gap:18px;padding:0 24px;border-bottom:1px solid var(--line);background:var(--panel);position:sticky;top:env(safe-area-inset-top,0px);z-index:30;flex-shrink:0}
 .top-left{display:flex;align-items:center;gap:16px;min-width:0}
 .brand-mark{width:36px;height:36px;border-radius:11px;display:grid;place-items:center;color:#fff;background:linear-gradient(145deg,#6db3ff,#007aff);flex-shrink:0}
-.top-left nav{display:flex;gap:4px}
-.top-left nav button{border:0;background:transparent;color:var(--muted);font-size:17px;padding:9px 14px;gap:8px}
-.top-left nav button[aria-selected="true"]{background:var(--blue-soft);color:var(--blue-ink);font-weight:600}
-.crumb{display:flex;align-items:center;gap:8px;font-size:15px;color:var(--muted);white-space:nowrap;overflow:hidden;min-width:0}
-.crumb b{color:var(--ink-2);font-weight:600;overflow:hidden;text-overflow:ellipsis}
-.crumb .sep{color:var(--faint)}
-.dday{font-size:14px;font-weight:700;background:var(--blue-soft);color:var(--blue-ink);border-radius:6px;padding:3px 8px}
+.brand{border:0;background:none;padding:4px 8px 4px 4px;gap:10px;border-radius:12px}
+.brand-text{display:flex;flex-direction:column;align-items:flex-start;line-height:1.15}
+.brand-text small{font-size:12px;font-weight:600;color:var(--muted);letter-spacing:.3px}
+.brand-text b{font-size:18px;font-weight:700;color:var(--ink);letter-spacing:-.3px;font-variant-numeric:tabular-nums}
+.brand-text b.unset{font-size:15px;font-weight:600;color:var(--blue-ink)}
+/* 탭: 애플식 세그먼트 */
+.tabs{display:flex;padding:3px;background:var(--panel-2);border:1px solid var(--line);border-radius:11px}
+.tabs button{border:0;background:transparent;color:var(--ink-2);font-size:16px;font-weight:600;padding:7px 18px;border-radius:8px;min-width:96px}
+.tabs button:hover{color:var(--ink)}
+.tabs button[aria-selected="true"]{background:var(--panel);color:var(--ink);box-shadow:0 1px 3px #1d2d4a1f,0 0 0 .5px #1d2d4a14}
 .top-right{display:flex;align-items:center;gap:12px;flex-shrink:0}
 .live{display:flex;align-items:center;gap:7px;font-size:14px;color:var(--muted);white-space:nowrap}
 .live i{width:8px;height:8px;border-radius:50%;background:var(--faint)}
@@ -140,14 +146,21 @@ svg{flex-shrink:0}
 .entry .sub{font-size:14px;font-weight:600;color:var(--muted)}
 .entry .entry-title{font-weight:500;color:var(--ink-2);overflow-wrap:anywhere;min-width:0}
 .entry .note-mark{color:var(--muted);margin-top:5px}
-.todo-row{display:flex;align-items:flex-start;min-width:0}
-.todo-row .entry{flex:1}
-.task{border:0;background:none;padding:6px 2px 6px 5px}
+/* 한 줄 = [체크박스?] 일정 [휴지통(마우스를 올리면)] */
+.row-wrap{display:flex;align-items:flex-start;min-width:0;border-radius:8px}
+.row-wrap:hover{background:var(--hover)}
+.day .row-wrap:hover{background:var(--panel)}
+.row-wrap .entry{flex:1;min-width:0}
+.row-wrap .entry:hover{background:none}
+.trash{border:0;background:none;padding:6px;color:var(--muted);border-radius:7px;visibility:hidden}
+.row-wrap:hover .trash,.trash:focus-visible{visibility:visible}
+.trash:hover{color:var(--danger);background:var(--danger-soft)}
+.task{border:0;background:none;padding:6px 2px 6px 6px}
 .task-box{width:18px;height:18px;border:2px solid var(--muted);border-radius:5px;display:grid;place-items:center;color:#fff}
 .task:hover .task-box{border-color:var(--blue)}
 .task-box.on{background:var(--blue);border-color:var(--blue)}
-.todo-row.done .entry{opacity:.5}
-.todo-row.done .entry .entry-title,.todo-row.done .entry .cls{text-decoration:line-through}
+.row-wrap.done .entry{opacity:.5}
+.row-wrap.done .entry .entry-title,.row-wrap.done .entry .cls{text-decoration:line-through}
 .calendar-footer{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 20px;border-top:1px solid var(--grid);font-size:15px;color:var(--muted);flex-wrap:wrap}
 .calendar-footer>span{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
 .calendar-footer .row-chip{margin-left:8px}
@@ -263,12 +276,14 @@ table.pt{border-collapse:separate;border-spacing:0;min-width:100%;font-size:15px
 .lesson-actions{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;margin-top:14px}
 .lesson-actions .add{margin-right:auto}
 
-.toast{position:fixed;bottom:calc(24px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);z-index:200;background:#1d2939;color:#fff;padding:12px 20px;border-radius:12px;box-shadow:0 8px 30px #152d4933;font-size:15px;max-width:calc(100% - 32px)}
+.toast{position:fixed;bottom:calc(24px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);z-index:200;background:#1d2939;color:#fff;padding:12px 20px;border-radius:12px;box-shadow:0 8px 30px #152d4933;font-size:15px;max-width:calc(100% - 32px);display:flex;align-items:center;gap:14px}
+.toast button{border:0;background:none;color:#8cc2ff;font-weight:700;font-size:15px;padding:0}
 
-@media (max-width:1200px){.day-panel,.lesson-panel{width:340px}.search{width:130px}.live span,.crumb{display:none}}
+@media (max-width:1200px){.day-panel,.lesson-panel{width:340px}.search{width:130px}.live span{display:none}}
 @media (max-width:760px){
 	.topbar{padding:10px 16px;flex-wrap:wrap}
-	.top-left nav button{padding:8px 10px;font-size:16px}
+	.tabs button{min-width:0;padding:7px 12px}
+	.brand-text small{display:none}
 	.me{display:none}
 	.page{flex-direction:column;padding:12px 16px;overflow-y:auto}
 	.calendar-panel,.prog-panel{flex:none}
@@ -277,7 +292,7 @@ table.pt{border-collapse:separate;border-spacing:0;min-width:100%;font-size:15px
 	.day{padding:5px 3px}
 	.day-heading small{display:none}
 	.day .entry,.day .entry:hover{padding:0;height:7px;border-radius:3px;background:var(--dot,var(--blue))}
-	.day .entry>*,.day .task{display:none}
+	.day .entry>*,.day .task,.day .trash{display:none}
 	.day-panel,.lesson-panel{width:auto;overflow:visible}
 	.toolbar h2{font-size:22px}
 	.search{width:100%}
@@ -292,12 +307,14 @@ table.pt{border-collapse:separate;border-spacing:0;min-width:100%;font-size:15px
 <div class="app">
 	<header class="topbar">
 		<div class="top-left">
-			<span class="brand-mark" aria-hidden="true"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="18" rx="2"/><path d="M7 3v18M17 3v18M2 8h5M2 13h5M2 18h5M17 8h5M17 13h5M17 18h5"/></svg></span>
-			<nav role="tablist">
-				<button role="tab" data-tab="cal" aria-selected="true"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>캘린더</button>
-				<button role="tab" data-tab="prog" aria-selected="false"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m3 17 2 2 4-4M3 7l2 2 4-4M13 6h8M13 12h8M13 18h8"/></svg>외부강사 진도표</button>
+			<button class="brand" id="brandBtn" title="영화제 기간 설정">
+				<span class="brand-mark" aria-hidden="true"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="18" rx="2"/><path d="M7 3v18M17 3v18M2 8h5M2 13h5M2 18h5M17 8h5M17 13h5M17 18h5"/></svg></span>
+				<span class="brand-text"><small>영화제</small><b id="dday">D-?</b></span>
+			</button>
+			<nav class="tabs" role="tablist">
+				<button role="tab" data-tab="cal" aria-selected="true">일정</button>
+				<button role="tab" data-tab="prog" aria-selected="false">외부강사 진도</button>
 			</nav>
-			<div class="crumb"><b id="festName">영화제 운영 캘린더</b><span class="sep">·</span><span id="festRange"></span><span class="dday" id="dday" hidden></span></div>
 		</div>
 		<div class="top-right">
 			<div class="live" id="live"><i></i><span id="liveText">연결 중</span></div>
@@ -370,6 +387,7 @@ const WD = ['일','월','화','수','목','금','토'];
 const NOTE_ICON = '<svg class="note-mark" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3Z"/><path d="M15 3v6h6"/></svg>';
 const PLUS = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>';
 const CHECK = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
+const TRASH = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6M10 11v6M14 11v6"/></svg>';
 const CLOSE = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>';
 
 const $ = s => document.querySelector(s);
@@ -386,7 +404,7 @@ const ckey = name => 'c' + Array.from(name).map(ch => ch.codePointAt(0).toString
 const state = {
 	events: new Map(),
 	progress: {},
-	cfg: {name:'영화제 운영 캘린더', start:'', end:'', classes:DEFAULT_CLASSES, lessons:[], periods:7},
+	cfg: {name:'영화제', start:'', end:'', classes:DEFAULT_CLASSES, lessons:[], periods:7},
 	view: new Date(),
 	day: null,
 	hiddenTypes: new Set(),
@@ -459,7 +477,7 @@ function connectLocal(){
 function sampleDocs(){
 	const t = new Date(), day = n => ymd(new Date(t.getFullYear(), t.getMonth(), t.getDate() + n));
 	const lessons = [['영화 언어 이해하기','숏·앵글·카메라 움직임'],['주제·기획 정하기','모둠별 기획안'],['시나리오 쓰기','3분 분량 초안'],['스토리보드 그리기','컷 구성과 촬영 계획'],['촬영 실습',''],['편집 실습',''],['음악·자막 입히기',''],['상영·감상 나누기','']].map(([title, detail]) => ({title, detail}));
-	const docs = {'settings/festival': {name:'영화제 운영 캘린더', start:day(21), end:day(23), classes:DEFAULT_CLASSES, lessons, periods:7}};
+	const docs = {'settings/festival': {name:'영화제', start:day(21), end:day(23), classes:DEFAULT_CLASSES, lessons, periods:7}};
 	const ev = (id, d, periods, classes, type, title, extra = {}) => docs['events/' + id] = {title, type, date:day(d), periods, classes, sessions:{}, note:'', by:'예시', at:Date.now(), ...extra};
 	ev('x1', 1, [2,3], ['3-1'], 'ext', '', {sessions:{'3-1':3}, note:'노트북 6대 (예시)'});
 	ev('x2', 1, [], 'all', 'event', '영화제 안내 가정통신문 (예시)');
@@ -567,15 +585,19 @@ function renderData(){
 
 function renderHeader(){
 	const {name, start, end} = state.cfg;
-	$('#festName').textContent = name || '영화제 운영 캘린더';
+	// 아이콘 옆에는 영화제 D-day만. 기간이 없으면 눌러서 설정하도록 안내
 	const fmt = s => { const d = parse(s); return `${d.getMonth()+1}.${d.getDate()}(${WD[d.getDay()]})`; };
-	$('#festRange').textContent = start && end ? `${fmt(start)} – ${fmt(end)}` : '기간 미설정';
 	const dd = $('#dday');
 	if (start) {
 		const today = ymd(new Date()), diff = Math.round((parse(start) - parse(today)) / 864e5);
-		dd.hidden = false;
 		dd.textContent = end && today > end ? '종료' : diff > 0 ? `D-${diff}` : diff === 0 ? 'D-DAY' : `${1 - diff}일차`;
-	} else dd.hidden = true;
+		dd.classList.remove('unset');
+		$('#brandBtn').title = `${name || '영화제'} · ${fmt(start)}${end ? ' – ' + fmt(end) : ''}`;
+	} else {
+		dd.textContent = '기간 설정';
+		dd.classList.add('unset');
+		$('#brandBtn').title = '영화제 기간 설정';
+	}
 	$('#festBtn').hidden = !start;
 	$('#meBtn').textContent = state.me ? `${state.me} 님` : '이름 설정';
 	document.querySelectorAll('[data-tab]').forEach(b => b.setAttribute('aria-selected', b.dataset.tab === state.tab));
@@ -600,10 +622,12 @@ function entryRow(e){
 		: t === 'subject'
 		? `<span class="cls">${esc(cls)}</span><span class="entry-title">${esc(e.title)}</span>`
 		: `<span class="cls">${esc(cls)}</span><span class="sub">${esc(extSummary(e))}</span>`;
-	const row = `<button class="entry" data-id="${e.id}" style="--dot:var(--${t === 'event' ? 'blue' : t === 'ext' ? 'ext-solid' : 'sub-fg'})" aria-label="${esc(`${TYPES[t].name} ${chipText(e)} ${cls} ${titleOf(e)} 수정`)}"><span class="row-chip t-${t}">${chipText(e)}</span>${body}${e.note ? NOTE_ICON : ''}</button>`;
-	if (!e.todo) return row;
-	// 할 일: 앞에 체크박스, 완료하면 흐리게 + 취소선
-	return `<div class="todo-row${e.done ? ' done' : ''}"><button class="task" data-todo="${e.id}" aria-label="${esc(titleOf(e))} ${e.done ? '완료 취소' : '완료'}" aria-pressed="${!!e.done}"><span class="task-box${e.done ? ' on' : ''}">${e.done ? CHECK : ''}</span></button>${row}</div>`;
+	// 할 일은 칩 대신 체크박스만. 완료하면 흐리게 + 취소선
+	const lead = e.todo
+		? `<button class="task" data-todo="${e.id}" aria-label="${esc(titleOf(e))} ${e.done ? '완료 취소' : '완료'}" aria-pressed="${!!e.done}"><span class="task-box${e.done ? ' on' : ''}">${e.done ? CHECK : ''}</span></button>`
+		: '';
+	const chip = e.todo ? (e.periods?.length ? `<span class="sub">${periodLabel(e.periods)}</span>` : '') : `<span class="row-chip t-${t}">${chipText(e)}</span>`;
+	return `<div class="row-wrap${e.todo ? ' todo' : ''}${e.done ? ' done' : ''}">${lead}<button class="entry" data-id="${e.id}" style="--dot:var(--${t === 'event' ? 'ev-fg' : t === 'ext' ? 'ext-solid' : 'sub-fg'})" aria-label="${esc(`${TYPES[t].name} ${chipText(e)} ${cls} ${titleOf(e)} 수정`)}">${chip}${body}${e.note ? NOTE_ICON : ''}</button><button class="trash" data-del="${e.id}" aria-label="${esc(titleOf(e))} 삭제" title="삭제">${TRASH}</button></div>`;
 }
 
 function renderGrid(){
@@ -874,6 +898,8 @@ async function toggleTodo(id){
 }
 
 document.addEventListener('click', e => {
+	const del = e.target.closest('[data-del]');
+	if (del) { e.stopPropagation(); return deleteEvent(del.dataset.del); }
 	const td = e.target.closest('[data-todo]');
 	if (td) { e.stopPropagation(); return toggleTodo(td.dataset.todo); }
 	const p = e.target.closest('[data-prog]');
@@ -906,6 +932,7 @@ $('#clsFilter').addEventListener('change', e => { state.cls = e.target.value; re
 $('#weekendToggle').addEventListener('change', e => { state.weekend = e.target.checked; store.set('ff-weekend', state.weekend ? '1' : '0'); renderGrid(); });
 $('#meBtn').onclick = () => askName();
 $('#settingsBtn').onclick = () => editSettings();
+$('#brandBtn').onclick = () => editSettings();
 
 $('#lessonPanel').addEventListener('input', e => { const i = e.target.dataset.li; if (i != null && state.lessonDraft) state.lessonDraft[i][e.target.dataset.k] = e.target.value; });
 $('#lessonPanel').addEventListener('click', async e => {
@@ -955,7 +982,7 @@ function editSettings(){
 		<footer><button type="button" data-act="cancel">취소</button><button class="primary">저장</button></footer>`,
 	async f => {
 		const next = {...c,
-			name: String(f.get('name') || '').trim() || '영화제 운영 캘린더',
+			name: String(f.get('name') || '').trim() || '영화제',
 			start: String(f.get('start') || ''), end: String(f.get('end') || ''),
 			classes: [...new Set(String(f.get('classes') || '').split(',').map(s => s.trim()).filter(Boolean))],
 			periods: Math.min(10, Math.max(1, Number(f.get('periods')) || 7)),
@@ -969,10 +996,30 @@ function editSettings(){
 }
 
 let toastTimer;
-function toast(msg){
+function toast(msg, undo){
 	document.querySelector('.toast')?.remove();
 	const t = document.createElement('div'); t.className = 'toast'; t.setAttribute('role', 'status'); t.textContent = msg;
-	document.body.append(t); clearTimeout(toastTimer); toastTimer = setTimeout(() => t.remove(), 2200);
+	if (undo) {
+		const b = document.createElement('button'); b.textContent = '실행 취소';
+		b.onclick = () => { t.remove(); undo(); };
+		t.append(b);
+	}
+	document.body.append(t); clearTimeout(toastTimer); toastTimer = setTimeout(() => t.remove(), undo ? 5000 : 2200);
+}
+
+// 휴지통: 바로 지우고, 5초 안에 실행 취소 가능
+async function deleteEvent(id){
+	const prev = state.events.get(id); if (!prev) return;
+	hideHover();
+	state.events.delete(id); renderData();
+	try {
+		await backend.del('events/' + id);
+		toast('일정을 삭제했어요', async () => {
+			const {id:_, ...body} = prev;
+			state.events.set(id, prev); renderData();
+			try { await backend.set('events/' + id, body); } catch { state.events.delete(id); renderData(); toast('되돌리지 못했어요. 연결을 확인해 주세요.'); }
+		});
+	} catch { state.events.set(id, prev); renderData(); toast('삭제하지 못했어요. 연결을 확인해 주세요.'); }
 }
 
 boot();
