@@ -325,6 +325,34 @@ table.pt{border-collapse:separate;border-spacing:0;min-width:100%;font-size:15px
 	.stats b{font-size:18px}
 	.legend{padding:0 12px 10px}
 	.tablewrap{max-height:none}
+	/* 진도표·차시 구성: 모바일 글자 크기 */
+	.prog-head h2{font-size:19px}
+	.prog-head p,.legend{font-size:12px}
+	.stats small{font-size:12px}
+	table.pt{font-size:13px}
+	.pt thead th{min-width:78px;padding:8px 4px}
+	.pt thead th b,.pt thead th small{font-size:12px}
+	.pt .cn{min-width:120px;padding:6px 10px}
+	.pt .cn b{font-size:15px}
+	.pt .cn small{font-size:12px;max-width:120px}
+	.cell{min-height:44px;font-size:12px}
+	.cell small{font-size:11px}
+	.rate{min-width:120px;padding:6px 10px!important}
+	.rate small{font-size:12px}
+	.lesson-panel{padding:16px 12px}
+	.lesson-panel h3{font-size:17px}
+	.lesson-panel header p{font-size:13px}
+	.lesson-panel .small{font-size:14px;padding:6px 12px}
+	.lessons li{grid-template-columns:30px 1fr;gap:3px 8px;padding:9px 0}
+	.lessons .no{font-size:12px;height:22px;border-radius:6px}
+	.lessons .lt{font-size:15px}
+	.lessons .ld{font-size:13px}
+	.lessons.editing li{grid-template-columns:30px 1fr auto}
+	.lessons.editing input{min-height:38px;padding:6px 9px;font-size:16px}
+	.lessons.editing textarea{min-height:48px;padding:6px 9px;font-size:16px}
+	.lessons.editing .del{padding:6px}
+	.lessons.editing .del svg{width:16px;height:16px}
+	.lesson-actions{gap:6px}
 
 	.overlay{padding:0;align-items:flex-end}
 	.modal{width:100%;max-height:92dvh;border-radius:20px 20px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom,0px))}
@@ -706,7 +734,7 @@ function renderDayPanel(){
 function renderProgress(){
 	const C = state.cfg.classes, L = lessons(), root = $('#prog');
 	if (!C.length || !L.length) {
-		root.innerHTML = `<div class="prog-head"><div><h2>외부강사 진도표</h2><p>${!C.length ? '설정에서 학급을 등록해 주세요.' : '오른쪽 차시 구성에서 차시별 활동을 먼저 등록해 주세요.'}</p></div></div>`;
+		root.innerHTML = `<div class="prog-head"><div><h2>외부강사 진도표</h2><p>${!C.length ? '설정에서 학급을 등록해 주세요.' : '차시 구성에서 차시별 활동을 먼저 등록해 주세요.'}</p></div></div>`;
 		return;
 	}
 	const plan = {};
