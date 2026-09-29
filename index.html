@@ -115,9 +115,9 @@ svg{flex-shrink:0}
 .day .date-number.today{background:var(--blue);color:#fff;font-weight:700}
 .day-heading small{font-size:14px;color:var(--blue-ink);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .day-heading small.fest-tag{color:var(--fest-ink);font-weight:500}
-/* 날짜 칸의 + 버튼: 평소엔 배경 없이 옅은 회색, 칸에 마우스를 올리면 조금 진해지고, 버튼에 올리면 파랗게 */
+/* 날짜 칸의 + 버튼: 평소엔 배경 없이 옅은 회색, 칸에 마우스를 올리면 + 가 파란색, 버튼에 올리면 파랗게 채움 */
 .day-add{border:0;background:transparent;color:var(--faint);padding:5px;border-radius:8px;margin-left:auto}
-.day:hover .day-add{color:var(--muted)}
+.day:hover .day-add{color:var(--blue)}
 .day-add:hover:not(:disabled){background:var(--blue);color:#fff}
 .day-content{display:flex;flex-direction:column;gap:4px}
 .entry{border:0;border-radius:8px;background:none;color:var(--ink);padding:5px 6px;justify-content:flex-start;align-items:flex-start;flex-wrap:wrap;width:100%;min-width:0;gap:3px 6px;font-size:16px;font-weight:600;text-align:left;white-space:normal;line-height:1.45}
@@ -593,6 +593,8 @@ function sampleDocs(){
 function setLive(on, text){ $('#live').classList.toggle('on', on); $('#liveText').textContent = text; }
 
 async function boot(){
+	// PC 첫 화면: 오늘 날짜의 사이드바를 열어 둠 (모바일은 아래에서 올라오는 창이라 닫아 둠)
+	if (!matchMedia('(max-width:760px)').matches) state.day = ymd(new Date());
 	render();
 	try { backend = await connectFirebase(); } catch { toast('Firebase에 연결하지 못했어요. 설정값을 확인해 주세요.'); }
 	if (!backend) try { backend = await connectClaude(); } catch {}
