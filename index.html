@@ -104,7 +104,7 @@ svg{flex-shrink:0}
 .day{border-top:1px solid var(--grid);border-right:1px solid var(--grid);padding:9px 9px 12px;display:flex;flex-direction:column;min-width:0;cursor:pointer;position:relative}
 .day.edge{border-right:0}
 .day.wkend,.day.out{background:var(--panel-2)}
-.day.fest{background:var(--fest)}
+/* 영화제 기간: 바탕은 다른 날과 같게 두고, 칸 위쪽 얇은 선과 "영화제 N일차" 글자로만 표시 */
 .day.fest::before{content:"";position:absolute;inset:-1px 0 auto;height:3px;background:var(--fest-ink);opacity:.35}
 .day.out .date-number{color:var(--faint);font-weight:500}
 .day:hover{background:var(--hover)}
@@ -114,7 +114,7 @@ svg{flex-shrink:0}
 .sun .date-number{color:var(--sun)}
 .day .date-number.today{background:var(--blue);color:#fff;font-weight:700}
 .day-heading small{font-size:14px;color:var(--blue-ink);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.day-heading small.fest-tag{color:var(--fest-ink);font-weight:500}
+.day-heading small.fest-tag{color:var(--fest-ink);font-weight:500;font-size:13px;letter-spacing:-.4px}
 /* 날짜 칸의 + 버튼: 평소엔 배경 없이 옅은 회색, 칸에 마우스를 올리면 + 가 파란색, 버튼에 올리면 파랗게 채움 */
 .day-add{border:0;background:transparent;color:var(--faint);padding:5px;border-radius:8px;margin-left:auto}
 .day:hover .day-add{color:var(--blue)}
