@@ -197,7 +197,7 @@ svg{flex-shrink:0}
 .modal>*,#editor>*{flex-shrink:0}
 #editor{flex:1 0 auto;display:flex;flex-direction:column}
 .ed-spacer{flex:1 0 0}
-.ed-overlay{align-items:flex-start;padding-top:max(16px,5vh)}
+.ed-overlay{align-items:flex-start}
 .modal h2{margin:0;font-size:24px;letter-spacing:-.5px}
 .modal header p{margin:3px 0 0;font-size:16px;color:var(--muted)}
 .modal footer{display:flex;justify-content:flex-end;gap:8px;border-top:1px solid var(--line);margin-top:22px;padding-top:18px}
@@ -929,10 +929,11 @@ function sessionsHtml(){
 }
 
 // 종류(학교·교과·외부)를 바꿔도 창 윗선이 움직이지 않게:
-//  PC는 창을 위쪽에 붙여 두고(아래로만 늘어남), 모바일은 아래에서 올라오는 창이라 세 종류 중 가장 높은 높이로 고정
+//  창을 열 때 세 종류 중 가장 높은 모양의 높이를 재 두고
+//  PC: 그 높이가 화면 가운데 올 때의 윗선에 창을 고정 (전처럼 가운데쯤 뜨고, 종류를 바꾸면 아래만 늘고 줆)
+//  모바일: 아래에서 올라오는 창이라 그 높이로 창을 고정
 let edMinH = 0;
 function renderEditor(focus){
-	if (!isMobile()) return drawEditor(focus);
 	if (!edMinH) {
 		const keep = ed;
 		for (const t of Object.keys(TYPES)) { ed = {...keep, type:t, sessions:{...keep.sessions}}; drawEditor(); edMinH = Math.max(edMinH, $('#modalRoot .modal').offsetHeight); }
@@ -940,8 +941,8 @@ function renderEditor(focus){
 	}
 	drawEditor(focus);
 	const m = $('#modalRoot .modal');
-	edMinH = Math.max(edMinH, m.offsetHeight);	// 외부 강사에서 학급을 많이 고르면 더 커질 수 있음
-	m.style.minHeight = edMinH + 'px';
+	if (isMobile()) { edMinH = Math.max(edMinH, m.offsetHeight); m.style.minHeight = edMinH + 'px'; return; }	// 외부 강사에서 학급을 많이 고르면 더 커질 수 있음
+	m.parentElement.style.paddingTop = Math.max(16, Math.round((innerHeight - edMinH) / 2)) + 'px';
 }
 
 function drawEditor(focus){
