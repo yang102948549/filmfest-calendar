@@ -3,12 +3,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>영화제 일정</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap">
+<!-- Pretendard: 사이트에 함께 올린 글꼴. 화면에 쓰인 글자 조각만 받고, 받는 동안에는 기기 글꼴로 먼저 보여 줌 -->
+<link rel="stylesheet" href="vendor/pretendard/pretendardvariable-dynamic-subset.css">
 <style>
 :root{
-	--font:-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Pretendard','Noto Sans KR','Malgun Gothic',sans-serif;
+	--font:'Pretendard Variable',Pretendard,-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;
 	color-scheme:light;
 	--bg:#f5f5f7;
 	--panel:#ffffff;--panel-2:#fafafc;--line:#e5e5ea;--grid:#ebebf0;
@@ -247,22 +246,22 @@ svg{flex-shrink:0}
 .legend span{display:inline-flex;align-items:center;gap:6px}
 .legend i{width:16px;height:16px;border-radius:5px}
 .tablewrap{flex:1;overflow:auto;border-top:1px solid var(--grid)}
-/* 표는 내용 폭만큼만 (차시가 적을 때 학급 열이 늘어나 붕 뜨지 않게) */
-table.pt{border-collapse:separate;border-spacing:0;font-size:15px}
+/* 표는 가로를 채우되 학급·진도율 열은 폭 고정, 남는 폭은 차시 열이 나눠 가짐 (차시 칸 버튼은 최대 폭까지만) */
+table.pt{border-collapse:separate;border-spacing:0;font-size:15px;width:100%}
 .pt th,.pt td{border-bottom:1px solid var(--grid);padding:6px;text-align:center;vertical-align:middle}
-.pt thead th{position:sticky;top:0;background:var(--panel-2);z-index:2;font-weight:600;color:var(--ink-2);width:112px;min-width:112px;vertical-align:bottom;padding:10px 6px}
+.pt thead th{position:sticky;top:0;background:var(--panel-2);z-index:2;font-weight:600;color:var(--ink-2);min-width:140px;vertical-align:bottom;padding:10px 8px}
 .pt thead th b{display:block;font-size:14px;color:var(--ext-fg)}
 .pt thead th small{display:block;font-size:14px;font-weight:500;color:var(--ink-2);line-height:1.35;margin-top:2px}
-.pt .cn{position:sticky;left:0;background:var(--panel);z-index:1;text-align:center;padding:8px 12px;width:150px;min-width:150px}
+.pt .cn{position:sticky;left:0;background:var(--panel);z-index:1;text-align:center;padding:8px 14px;width:190px;min-width:190px}
 .pt thead .cn{z-index:3;background:var(--panel-2)}
 .pt .cn b{font-size:17px}
-.pt .cn small{display:block;font-size:14px;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:150px;margin-inline:auto}
-.cell{width:100%;min-height:52px;flex-direction:column;gap:1px;padding:4px;border-radius:10px;font-size:14px;line-height:1.25;font-weight:700}
+.pt .cn small{display:block;font-size:14px;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:180px;margin-inline:auto}
+.cell{width:100%;max-width:200px;margin-inline:auto;min-height:52px;flex-direction:column;gap:1px;padding:4px;border-radius:10px;font-size:14px;line-height:1.25;font-weight:700}
 .cell.done{background:var(--ext-solid);border-color:var(--ext-solid);color:#fff}
 .cell.next{border:1.5px dashed var(--ext-solid);color:var(--ext-fg);background:var(--panel)}
 .cell.lock{background:var(--panel-2);border-color:transparent;color:var(--muted)}
 .cell small{font-size:13px;font-weight:500}
-.rate{min-width:170px;padding:8px 16px!important}
+.rate{width:220px;min-width:220px;padding:8px 20px!important}
 .bar{height:9px;border-radius:99px;background:var(--panel-2);border:1px solid var(--line);overflow:hidden}
 .bar i{display:block;height:100%;background:var(--ext-solid)}
 .rate small{display:block;text-align:right;margin-top:5px;font-variant-numeric:tabular-nums;color:var(--ink-2);font-weight:600;font-size:14px}
@@ -372,7 +371,7 @@ table.pt{border-collapse:separate;border-spacing:0;font-size:15px}
 	.legend span{gap:4px}
 	.legend i{width:11px;height:11px;border-radius:3px}
 	.tablewrap{max-height:none}
-	table.pt{font-size:12px}
+	table.pt{font-size:12px;width:auto}
 	.pt th,.pt td{padding:3px}
 	.pt thead th{width:62px;min-width:62px;max-width:62px;padding:6px 3px}
 	.pt thead th b{font-size:11px}
@@ -382,7 +381,7 @@ table.pt{border-collapse:separate;border-spacing:0;font-size:15px}
 	.pt .cn small{display:none}
 	.cell{min-height:36px;padding:2px;font-size:11px;border-radius:7px;letter-spacing:-.3px}
 	.cell small{font-size:10px}
-	.rate{min-width:78px;padding:4px 8px!important}
+	.rate{width:78px;min-width:78px;padding:4px 8px!important}
 	.bar{height:6px}
 	.rate small{font-size:11px;margin-top:3px}
 	/* 차시 구성 */
@@ -551,7 +550,8 @@ let backend = null;
 function loadScript(src){ return new Promise((ok, no) => { const s = document.createElement('script'); s.src = src; s.onload = ok; s.onerror = no; document.head.append(s); }); }
 async function connectFirebase(){
 	if (!FIREBASE_CONFIG) return null;
-	const base = 'https://cdn.jsdelivr.net/npm/firebase@10.12.2/';
+	// Firebase 10.12.2 파일을 사이트에 함께 올려 둠 (외부 CDN이 막히거나 느린 학교망 대비)
+	const base = 'vendor/';
 	await loadScript(base + 'firebase-app-compat.js');
 	await loadScript(base + 'firebase-firestore-compat.js');
 	const fs = firebase.initializeApp(FIREBASE_CONFIG).firestore();
