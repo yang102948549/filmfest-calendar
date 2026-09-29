@@ -131,7 +131,11 @@ svg{flex-shrink:0}
 .row-wrap{display:flex;align-items:flex-start;min-width:0;border-radius:8px}
 .row-wrap:hover{background:var(--hover)}
 .day .row-wrap:hover{background:none}
-.day .row-wrap:hover .entry-title,.day .row-wrap:hover .cls{color:var(--blue)}
+/* 일정 줄 호버: 학급·일정명 글자를 그 칩 색으로 */
+.entry.k-event{--tc:var(--ev-fg)}
+.entry.k-subject{--tc:var(--sub-fg)}
+.entry.k-ext{--tc:var(--ext-fg)}
+.day .row-wrap:hover .entry-title,.day .row-wrap:hover .cls{color:var(--tc)!important}
 .row-wrap .entry{flex:1;min-width:0}
 .row-wrap .entry:hover{background:none}
 .trash{border:0;background:none;padding:6px;color:var(--muted);border-radius:7px;visibility:hidden}
