@@ -62,6 +62,7 @@ svg{flex-shrink:0}
 .brand-name{font-size:19px;font-weight:700;color:var(--ink);letter-spacing:-.5px}
 .dday{font-size:14px;font-weight:600;color:var(--ink-2);background:var(--hover);border-radius:6px;padding:3px 8px;font-variant-numeric:tabular-nums}
 .dday.unset{color:var(--blue)}
+.brand:hover .dday{background:var(--blue-soft);color:var(--blue)}
 /* 탭: 회색 트랙 위 흰 칩이 올라오는 차분한 세그먼트 */
 .tabs{display:flex;gap:2px;padding:2px;background:var(--hover);border-radius:8px}
 .tabs button{border:0;background:transparent;color:var(--muted);font-size:14px;font-weight:600;padding:5px 14px;border-radius:6px}
@@ -312,10 +313,9 @@ table.pt{border-collapse:separate;border-spacing:0;font-size:15px}
 	.page{padding:0;gap:0}
 	.calendar-panel{border:0;border-radius:0;box-shadow:none}
 	.toolbar{padding:10px 12px 8px;flex-wrap:nowrap}
-	.toolbar>div:first-child{flex-wrap:nowrap;gap:2px}
-	.toolbar>div:last-child,#festBtn,.weekend-toggle,.calendar-footer{display:none}
-	.toolbar h2{font-size:19px;margin-right:4px}
-	.toolbar #todayBtn{font-size:13px;padding:4px 10px;border-radius:8px;margin-left:2px}
+	.toolbar>div:first-child{flex-wrap:nowrap;gap:6px}
+	.toolbar>div:last-child,.weekend-toggle,.calendar-footer{display:none}
+	.toolbar h2{font-size:19px;margin-right:12px}
 	/* 색 안내: 칩 색 = 학교 일정·교과 수업·외부 강사 */
 	.toolbar>.legend-m{display:flex;flex-wrap:nowrap;gap:7px;font-size:11px;font-weight:600;color:var(--ink-2);white-space:nowrap;letter-spacing:-.3px}
 	.legend-m span{display:inline-flex;align-items:center;gap:3px}
@@ -458,8 +458,6 @@ table.pt{border-collapse:separate;border-spacing:0;font-size:15px}
 					<h2 id="monthTitle"></h2>
 					<button class="icon" id="prev" aria-label="지난달"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg></button>
 					<button class="icon" id="next" aria-label="다음달"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg></button>
-					<button class="small" id="todayBtn">오늘</button>
-					<button class="small" id="festBtn">영화제 기간</button>
 					<label class="weekend-toggle"><input type="checkbox" id="weekendToggle">주말 표시</label>
 				</div>
 				<!-- 모바일 전용 색 안내: 칩 색이 무슨 종류인지 -->
@@ -721,13 +719,12 @@ function renderHeader(){
 		const today = ymd(new Date()), diff = Math.round((parse(start) - parse(today)) / 864e5);
 		dd.textContent = end && today > end ? '종료' : diff > 0 ? `D-${diff}` : diff === 0 ? 'D-DAY' : `${1 - diff}일차`;
 		dd.classList.remove('unset');
-		$('#brandBtn').title = `${name || '영화제'} · ${fmt(start)}${end ? ' – ' + fmt(end) : ''}`;
+		$('#brandBtn').title = `영화제 기간 보기 · ${name || '영화제'} ${fmt(start)}${end ? ' – ' + fmt(end) : ''}`;
 	} else {
 		dd.textContent = '기간 설정';
 		dd.classList.add('unset');
 		$('#brandBtn').title = '영화제 기간 설정';
 	}
-	$('#festBtn').hidden = !start;
 	document.querySelectorAll('[data-tab]').forEach(b => b.setAttribute('aria-selected', b.dataset.tab === state.tab));
 	$('#calView').hidden = state.tab !== 'cal';
 	$('#fab').setAttribute('aria-label', state.tab === 'cal' ? '일정 추가' : '차시 추가');
@@ -1057,9 +1054,7 @@ $('#calView').addEventListener('click', e => {
 });
 $('#prev').onclick = () => { state.view = new Date(state.view.getFullYear(), state.view.getMonth() - 1, 1); renderGrid(); };
 $('#next').onclick = () => { state.view = new Date(state.view.getFullYear(), state.view.getMonth() + 1, 1); renderGrid(); };
-$('#todayBtn').onclick = () => openDay(ymd(new Date()));
 $('#sideToggle').onclick = e => { e.stopPropagation(); state.side = !state.side; if (state.side && !state.day) state.day = ymd(new Date()); renderGrid(); renderDayPanel(); };
-$('#festBtn').onclick = () => state.cfg.start && openDay(state.cfg.start);
 $('#q').addEventListener('input', e => { state.q = e.target.value; renderGrid(); renderDayPanel(); });
 document.querySelectorAll('[data-filter]').forEach(b => b.onclick = () => { const t = b.dataset.filter; state.hiddenTypes.has(t) ? state.hiddenTypes.delete(t) : state.hiddenTypes.add(t); renderFilters(); renderGrid(); renderDayPanel(); });
 $('#clsFilter').addEventListener('change', e => { state.cls = e.target.value; renderGrid(); renderDayPanel(); });
@@ -1076,7 +1071,12 @@ function addLesson(){
 	input?.focus({preventScroll:true});
 }
 const isMobile = () => matchMedia('(max-width:760px)').matches;
-$('#brandBtn').onclick = () => editSettings();
+// 영화제 이름·D-day를 누르면 영화제 첫날로 이동해 그날 일정을 연다 (기간이 없으면 설정 창)
+$('#brandBtn').onclick = () => {
+	if (!state.cfg.start) return editSettings();
+	if (state.tab !== 'cal') { state.tab = 'cal'; hideHover(); renderHeader(); renderData(); }
+	openDay(state.cfg.start);
+};
 
 $('#lessonPanel').addEventListener('input', e => { const i = e.target.dataset.li; if (i != null && state.lessonDraft) state.lessonDraft[i][e.target.dataset.k] = e.target.value; });
 $('#lessonPanel').addEventListener('click', async e => {
