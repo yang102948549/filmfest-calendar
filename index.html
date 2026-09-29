@@ -107,7 +107,7 @@ svg{flex-shrink:0}
 /* 영화제 기간: 바탕은 다른 날과 같게 두고, 칸 위쪽 얇은 선과 "영화제 N일차" 글자로만 표시 */
 .day.fest::before{content:"";position:absolute;inset:-1px 0 auto;height:3px;background:var(--fest-ink);opacity:.35}
 .day.out .date-number{color:var(--faint);font-weight:500}
-.day:hover{background:var(--hover)}
+.day:hover{background:#f4f8ff}	/* 날짜 칸 호버: 연한 하늘색(누를 수 있다는 느낌) */
 .day.selected{box-shadow:inset 0 0 0 2px var(--blue);background:var(--sel)}
 .day-heading{display:flex;align-items:center;gap:6px;height:32px;margin-bottom:8px;flex-shrink:0}
 .date-number{border:0;background:none;padding:0;width:32px;height:32px;border-radius:9px;font-size:18px;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums}
@@ -122,7 +122,7 @@ svg{flex-shrink:0}
 .day-content{display:flex;flex-direction:column;gap:4px}
 .entry{border:0;border-radius:8px;background:none;color:var(--ink);padding:5px 6px;justify-content:flex-start;align-items:flex-start;flex-wrap:wrap;width:100%;min-width:0;gap:3px 6px;font-size:16px;font-weight:600;text-align:left;white-space:normal;line-height:1.45}
 .entry:hover:not(:disabled){background:var(--hover)}
-.day .entry:hover{background:var(--panel)}
+.day .entry:hover{background:none}
 .entry .cls{font-weight:700;color:var(--ink);overflow-wrap:anywhere}
 .entry .sub{font-size:14px;font-weight:600;color:var(--muted)}
 .entry .entry-title{font-weight:500;color:var(--ink-2);overflow-wrap:anywhere;min-width:0}
@@ -130,7 +130,8 @@ svg{flex-shrink:0}
 /* 한 줄 = [체크박스?] 일정 [휴지통(마우스를 올리면)] */
 .row-wrap{display:flex;align-items:flex-start;min-width:0;border-radius:8px}
 .row-wrap:hover{background:var(--hover)}
-.day .row-wrap:hover{background:var(--panel)}
+.day .row-wrap:hover{background:none}
+.day .row-wrap:hover .entry-title,.day .row-wrap:hover .cls{color:var(--blue)}
 .row-wrap .entry{flex:1;min-width:0}
 .row-wrap .entry:hover{background:none}
 .trash{border:0;background:none;padding:6px;color:var(--muted);border-radius:7px;visibility:hidden}
@@ -201,12 +202,12 @@ svg{flex-shrink:0}
 .segmented button[data-type="ext"]{--c:var(--ext-fg)}
 .segmented button[aria-pressed="true"],.segmented button[aria-pressed="true"]:hover{background:color-mix(in srgb,var(--c) 9%,#fff);border-color:color-mix(in srgb,var(--c) 32%,#fff);color:var(--c)}
 .field{display:flex;flex-direction:column;gap:9px;margin-bottom:20px}
-.field>span,.field>label{font-size:15px;font-weight:600;color:var(--ink-2)}
+.field>span,.field>label{font-size:13px;font-weight:600;color:var(--ink-2)}
 .field>span em,.field>label em{font-style:normal;font-weight:500;color:var(--muted);margin-left:6px}
 .pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(82px,1fr));gap:8px}
 .cgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
 /* 교시·학급 버튼: 평소 흰 바탕·회색 글자, 고른 것만 종류 색을 옅게. 테두리·글자는 과하지 않게 */
-.pill{--c:var(--blue);border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--ink-2);font-size:15px;font-weight:500;padding:9px 6px;width:100%;font-variant-numeric:tabular-nums;transition:background .12s,color .12s,border-color .12s}
+.pill{--c:var(--blue);border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--ink-2);font-size:14px;font-weight:500;padding:8px 6px;width:100%;font-variant-numeric:tabular-nums;transition:background .12s,color .12s,border-color .12s}
 .pill[aria-pressed="true"],.pill[aria-pressed="true"]:hover{background:color-mix(in srgb,var(--c) 9%,#fff);border-color:color-mix(in srgb,var(--c) 32%,#fff);color:var(--c);font-weight:600}
 .modal.type-event .pill{--c:var(--ev-fg)}
 .modal.type-subject .pill{--c:var(--sub-fg)}
@@ -216,14 +217,16 @@ svg{flex-shrink:0}
 @media (hover:hover){
 	.pill:hover:not([aria-pressed="true"]),.segmented button:hover:not([aria-pressed="true"]){background:var(--hover)}
 }
-.checkline{display:flex;align-items:center;gap:10px;font-size:16px;font-weight:600;color:var(--ink);cursor:pointer;margin:-4px 0 20px;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--panel-2)}
+.checkline{display:flex;align-items:center;gap:10px;font-size:14px;font-weight:600;color:var(--ink);cursor:pointer;margin:-4px 0 20px;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--panel-2)}
 .checkline input{width:20px;height:20px;min-height:0;accent-color:var(--blue);flex-shrink:0}
 .checkline em{font-style:normal;font-weight:500;color:var(--muted);font-size:14px}
 .pill.all{grid-column:1/-1}
 .sess-edit{display:flex;flex-direction:column;gap:8px;padding:12px;border-radius:12px;background:var(--ext-bg)}
 .sess-edit .srow{display:grid;grid-template-columns:52px 1fr;gap:10px;align-items:center}
-.sess-edit b{font-size:16px;color:var(--ext-fg)}
-.sess-edit select{min-height:42px;padding:6px 10px;font-size:16px;background:var(--panel)}
+.sess-edit b{font-size:14px;color:var(--ext-fg)}
+/* 일정·설정 창 입력칸 글자도 탭·버튼(14px)과 맞춤 (모바일은 아래에서 16px — iPhone 확대 방지) */
+.modal input:not([type=checkbox]),.modal select,.modal textarea{font-size:14px;min-height:40px;padding:8px 12px}
+.sess-edit select{min-height:40px;padding:6px 10px;font-size:14px;background:var(--panel)}
 .err{font-size:15px;color:var(--danger);line-height:1.5;margin:0}
 
 /* 진도표 */
