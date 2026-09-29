@@ -33,7 +33,7 @@ button{cursor:pointer;display:inline-flex;align-items:center;justify-content:cen
 /* 기본 호버는 우선순위 0: 색이 칠해진 버튼(선택된 칩·완료 칸·오늘)의 흰 글씨가 사라지지 않게 */
 :where(button:hover:not(:disabled)){background:var(--hover)}
 button:disabled{cursor:not-allowed}
-button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--blue-ring);outline-offset:2px}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid color-mix(in srgb,var(--blue) 45%,#fff);outline-offset:1px}
 input,select,textarea{width:100%;border:1px solid var(--line);background:var(--panel-2);border-radius:10px;min-height:46px;padding:10px 12px;font-size:17px}
 input:focus,textarea:focus,select:focus{background:var(--panel)}
 /* 플레이스홀더는 입력 글자보다 작고 옅게 */
@@ -193,29 +193,29 @@ svg{flex-shrink:0}
 .modal footer button{min-width:84px}
 .modal footer .danger{color:var(--danger);margin-right:auto;border-color:transparent;background:transparent}
 .modal footer .danger.armed{background:var(--danger-soft)}
-/* 종류 선택: 종류별 색을 옅게 깐 버튼 세 개(교시·학급 버튼과 같은 모서리). 고른 것만 그 색으로 채움 */
+/* 종류 선택: 평소엔 흰 버튼에 종류 색 글자, 고른 것만 그 색을 옅게 깔고 테두리를 은은하게 */
 .segmented{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:20px}
-.segmented button{--tint:color-mix(in srgb,var(--c) 7%,#fff);border:1px solid color-mix(in srgb,var(--c) 22%,#fff);background:var(--tint);color:color-mix(in srgb,var(--c) 82%,#1c1c1e);font-size:14px;font-weight:600;padding:9px 6px;border-radius:10px;transition:background .15s,color .15s,border-color .15s}
-.segmented button[data-type="event"]{--c:#4c6ef5}
-.segmented button[data-type="subject"]{--c:#2f9e7a}
-.segmented button[data-type="ext"]{--c:#e8645a}
-.segmented button:hover:not([aria-pressed="true"]){background:color-mix(in srgb,var(--c) 13%,#fff);border-color:color-mix(in srgb,var(--c) 38%,#fff)}
-.segmented button[aria-pressed="true"],.segmented button[aria-pressed="true"]:hover{background:var(--c);border-color:var(--c);color:#fff}
+.segmented button{border:1px solid var(--line);background:var(--panel);color:color-mix(in srgb,var(--c) 75%,#8e8e93);font-size:14px;font-weight:600;padding:9px 6px;border-radius:10px;transition:background .15s,color .15s,border-color .15s}
+.segmented button[data-type="event"]{--c:var(--ev-fg)}
+.segmented button[data-type="subject"]{--c:var(--sub-fg)}
+.segmented button[data-type="ext"]{--c:var(--ext-fg)}
+.segmented button[aria-pressed="true"],.segmented button[aria-pressed="true"]:hover{background:color-mix(in srgb,var(--c) 9%,#fff);border-color:color-mix(in srgb,var(--c) 32%,#fff);color:var(--c)}
 .field{display:flex;flex-direction:column;gap:9px;margin-bottom:20px}
 .field>span,.field>label{font-size:15px;font-weight:600;color:var(--ink-2)}
 .field>span em,.field>label em{font-style:normal;font-weight:500;color:var(--muted);margin-left:6px}
 .pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(82px,1fr));gap:8px}
 .cgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-.pill{border-radius:10px;border:1px solid var(--line);background:var(--panel-2);color:var(--ink-2);font-size:16px;font-weight:600;padding:9px 6px;width:100%;font-variant-numeric:tabular-nums}
-.pill:hover{border-color:var(--blue);color:var(--blue-ink)}
-.pill[aria-pressed="true"],.pill[aria-pressed="true"]:hover{background:var(--blue);border-color:var(--blue);color:#fff}
-/* 교시·학급 선택도 고른 종류의 색으로 */
-.modal.type-event .pill[aria-pressed="true"]{background:var(--ev-bg);border-color:var(--ev-fg);color:var(--ev-fg);box-shadow:inset 0 0 0 .5px var(--ev-fg)}
-.modal.type-subject .pill[aria-pressed="true"]{background:var(--sub-bg);border-color:var(--sub-fg);color:var(--sub-fg);box-shadow:inset 0 0 0 .5px var(--sub-fg)}
-.modal.type-ext .pill[aria-pressed="true"]{background:var(--ext-bg);border-color:var(--ext-fg);color:var(--ext-fg);box-shadow:inset 0 0 0 .5px var(--ext-fg)}
-.modal.type-event .pill:hover{border-color:var(--ev-fg);color:var(--ev-fg)}
-.modal.type-subject .pill:hover{border-color:var(--sub-fg);color:var(--sub-fg)}
-.modal.type-ext .pill:hover{border-color:var(--ext-fg);color:var(--ext-fg)}
+/* 교시·학급 버튼: 평소 흰 바탕·회색 글자, 고른 것만 종류 색을 옅게. 테두리·글자는 과하지 않게 */
+.pill{--c:var(--blue);border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--ink-2);font-size:15px;font-weight:500;padding:9px 6px;width:100%;font-variant-numeric:tabular-nums;transition:background .12s,color .12s,border-color .12s}
+.pill[aria-pressed="true"],.pill[aria-pressed="true"]:hover{background:color-mix(in srgb,var(--c) 9%,#fff);border-color:color-mix(in srgb,var(--c) 32%,#fff);color:var(--c);font-weight:600}
+.modal.type-event .pill{--c:var(--ev-fg)}
+.modal.type-subject .pill{--c:var(--sub-fg)}
+.modal.type-ext .pill{--c:var(--ext-fg)}
+/* 마우스가 있는 기기에서만 호버. 선택 모양과 헷갈리지 않게 회색만 살짝 (휴대폰은 누른 뒤 호버가 남아 취소가 안 된 것처럼 보였음) */
+.pill:hover,.segmented button:hover{background:var(--panel)}
+@media (hover:hover){
+	.pill:hover:not([aria-pressed="true"]),.segmented button:hover:not([aria-pressed="true"]){background:var(--hover)}
+}
 .checkline{display:flex;align-items:center;gap:10px;font-size:16px;font-weight:600;color:var(--ink);cursor:pointer;margin:-4px 0 20px;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--panel-2)}
 .checkline input{width:20px;height:20px;min-height:0;accent-color:var(--blue);flex-shrink:0}
 .checkline em{font-style:normal;font-weight:500;color:var(--muted);font-size:14px}
