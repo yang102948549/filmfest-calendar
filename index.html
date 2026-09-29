@@ -197,6 +197,7 @@ svg{flex-shrink:0}
 .modal>*,#editor>*{flex-shrink:0}
 #editor{flex:1 0 auto;display:flex;flex-direction:column}
 .ed-spacer{flex:1 0 0}
+.ed-overlay{align-items:flex-start;padding-top:max(16px,5vh)}
 .modal h2{margin:0;font-size:24px;letter-spacing:-.5px}
 .modal header p{margin:3px 0 0;font-size:16px;color:var(--muted)}
 .modal footer{display:flex;justify-content:flex-end;gap:8px;border-top:1px solid var(--line);margin-top:22px;padding-top:18px}
@@ -927,9 +928,11 @@ function sessionsHtml(){
 	return `<div class="sess-edit">${classesOf(ed).map(c => { const next = nextFor(c, ed.id); return `<div class="srow"><b>${esc(c)}</b><select data-sess="${esc(c)}" aria-label="${esc(c)} 차시">${L.map((l, i) => `<option value="${i+1}"${ed.sessions[c] === i+1 ? ' selected' : ''}>${i+1}차시 · ${esc(l.title)}${i+1 === next ? ' (다음 차례)' : i+1 <= doneOf(c) ? ' (완료)' : ''}</option>`).join('')}</select></div>`; }).join('')}</div>`;
 }
 
-// 일정 창 높이: 세 종류(학교·교과·외부) 중 가장 높은 모양에 맞춰 고정 → 종류를 바꿔도 창 크기가 그대로
+// 종류(학교·교과·외부)를 바꿔도 창 윗선이 움직이지 않게:
+//  PC는 창을 위쪽에 붙여 두고(아래로만 늘어남), 모바일은 아래에서 올라오는 창이라 세 종류 중 가장 높은 높이로 고정
 let edMinH = 0;
 function renderEditor(focus){
+	if (!isMobile()) return drawEditor(focus);
 	if (!edMinH) {
 		const keep = ed;
 		for (const t of Object.keys(TYPES)) { ed = {...keep, type:t, sessions:{...keep.sessions}}; drawEditor(); edMinH = Math.max(edMinH, $('#modalRoot .modal').offsetHeight); }
@@ -944,7 +947,7 @@ function renderEditor(focus){
 function drawEditor(focus){
 	syncSessions();
 	const P = state.cfg.periods || 7, isNew = !ed.id, all = ed.classes === 'all', t = ed.type;
-	$('#modalRoot').innerHTML = `<div class="overlay" data-act="backdrop"><div class="modal type-${t}" role="dialog" aria-modal="true" aria-labelledby="edTitle">
+	$('#modalRoot').innerHTML = `<div class="overlay ed-overlay" data-act="backdrop"><div class="modal type-${t}" role="dialog" aria-modal="true" aria-labelledby="edTitle">
 		<header><div><h2 id="edTitle">${isNew ? '새 일정' : '일정 수정'}</h2><p>${longDate(ed.date)}</p></div><button class="icon" data-act="close" aria-label="닫기">${CLOSE}</button></header>
 		<form id="editor" novalidate>
 			<div class="segmented" role="group" aria-label="종류">${Object.entries(TYPES).map(([id, x]) => `<button type="button" data-type="${id}" aria-pressed="${t === id}">${x.name}</button>`).join('')}</div>
