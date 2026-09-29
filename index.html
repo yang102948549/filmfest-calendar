@@ -192,6 +192,11 @@ svg{flex-shrink:0}
 .overlay{position:fixed;inset:0;z-index:100;background:var(--overlay);display:flex;align-items:center;justify-content:center;padding:16px}
 .modal{background:var(--panel);border-radius:22px;padding:26px 28px;width:580px;max-width:100%;max-height:calc(100% - 16px);overflow:auto;box-shadow:0 30px 100px #0f1d3340}
 .modal>header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:18px}
+/* 창 높이를 고정했을 때 남는 공간은 버튼 줄 위에 둠 (버튼은 항상 창 맨 아래) */
+.modal{display:flex;flex-direction:column}
+.modal>*,#editor>*{flex-shrink:0}
+#editor{flex:1 0 auto;display:flex;flex-direction:column}
+.ed-spacer{flex:1 0 0}
 .modal h2{margin:0;font-size:24px;letter-spacing:-.5px}
 .modal header p{margin:3px 0 0;font-size:16px;color:var(--muted)}
 .modal footer{display:flex;justify-content:flex-end;gap:8px;border-top:1px solid var(--line);margin-top:22px;padding-top:18px}
@@ -897,6 +902,7 @@ function openEditor(date, id){
 	const e = id && state.events.get(id);
 	ed = e ? {id, type:typeOf(e), title:e.title || '', date:e.date, periods:[...(e.periods || [])], classes:e.classes === 'all' ? 'all' : [...(e.classes || [])], sessions:{...(e.sessions || {})}, note:e.note || '', todo:!!e.todo, done:!!e.done, original:e}
 		: {type:'event', title:'', date, periods:[], classes:[], sessions:{}, note:'', todo:false, done:false};
+	edMinH = 0;
 	renderEditor(true);
 }
 
@@ -921,7 +927,21 @@ function sessionsHtml(){
 	return `<div class="sess-edit">${classesOf(ed).map(c => { const next = nextFor(c, ed.id); return `<div class="srow"><b>${esc(c)}</b><select data-sess="${esc(c)}" aria-label="${esc(c)} 차시">${L.map((l, i) => `<option value="${i+1}"${ed.sessions[c] === i+1 ? ' selected' : ''}>${i+1}차시 · ${esc(l.title)}${i+1 === next ? ' (다음 차례)' : i+1 <= doneOf(c) ? ' (완료)' : ''}</option>`).join('')}</select></div>`; }).join('')}</div>`;
 }
 
+// 일정 창 높이: 세 종류(학교·교과·외부) 중 가장 높은 모양에 맞춰 고정 → 종류를 바꿔도 창 크기가 그대로
+let edMinH = 0;
 function renderEditor(focus){
+	if (!edMinH) {
+		const keep = ed;
+		for (const t of Object.keys(TYPES)) { ed = {...keep, type:t, sessions:{...keep.sessions}}; drawEditor(); edMinH = Math.max(edMinH, $('#modalRoot .modal').offsetHeight); }
+		ed = keep;
+	}
+	drawEditor(focus);
+	const m = $('#modalRoot .modal');
+	edMinH = Math.max(edMinH, m.offsetHeight);	// 외부 강사에서 학급을 많이 고르면 더 커질 수 있음
+	m.style.minHeight = edMinH + 'px';
+}
+
+function drawEditor(focus){
 	syncSessions();
 	const P = state.cfg.periods || 7, isNew = !ed.id, all = ed.classes === 'all', t = ed.type;
 	$('#modalRoot').innerHTML = `<div class="overlay" data-act="backdrop"><div class="modal type-${t}" role="dialog" aria-modal="true" aria-labelledby="edTitle">
@@ -936,6 +956,7 @@ function renderEditor(focus){
 			<div class="field"><label for="f-note">메모<em>선택</em></label><textarea id="f-note" data-k="note" maxlength="1000" placeholder="준비물, 전달 사항 등">${esc(ed.note)}</textarea></div>
 			<div class="field"><label for="f-date">날짜</label><input id="f-date" type="date" data-k="date" value="${ed.date}"></div>
 			<p class="err" id="edErr" hidden></p>
+			<div class="ed-spacer"></div>
 			<footer>${isNew ? '' : '<button type="button" class="danger" data-act="delete">삭제</button>'}<button type="button" data-act="close">취소</button><button type="submit" class="primary">${isNew ? '추가' : '저장'}</button></footer>
 		</form></div></div>`;
 	if (focus) ($('#f-title') || $('.segmented [aria-pressed="true"]')).focus();
