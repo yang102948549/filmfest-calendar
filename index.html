@@ -153,6 +153,16 @@ svg{flex-shrink:0}
 .day-panel h2{margin:0;font-size:24px;letter-spacing:-.5px}
 .day-panel h2 small{font-size:15px;color:var(--muted);font-weight:500;margin-left:5px}
 .side-list{display:flex;flex-direction:column;gap:10px}
+/* 하루 일정의 추가 버튼: 채우지 않고 파란 글자만, 올리면 옅은 파랑 */
+.add-quiet{border:0;background:transparent;color:var(--blue);font-size:14px;font-weight:600;padding:5px 9px;gap:4px;border-radius:8px}
+.add-quiet svg{width:14px;height:14px}
+.add-quiet:hover:not(:disabled){background:var(--blue-soft);color:var(--blue-ink)}
+/* PC에서는 닫기(×) 대신 사이드바 가장자리의 화살표 버튼으로 접고 펼침 */
+.day-panel .close-day{display:none}
+#calView{gap:0}
+.side-toggle{align-self:center;width:18px;height:44px;margin:0 3px;padding:0;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--muted);flex-shrink:0}
+.side-toggle:hover:not(:disabled){background:var(--hover);color:var(--ink)}
+.side-toggle svg{width:12px;height:12px}
 .side-item{border:1px solid var(--line);border-radius:14px;padding:10px;display:flex;flex-direction:column;gap:8px}
 .side-item .entry{font-size:17px}
 .side-note{font-size:15px;color:var(--ink-2);line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere;padding:0 6px}
@@ -276,14 +286,18 @@ table.pt{border-collapse:separate;border-spacing:0;min-width:100%;font-size:15px
 /* ── 모바일: 구글 캘린더처럼 달력이 화면을 채우고, 날짜를 누르면 아래에서 그날 일정이 올라옴 ── */
 @media (max-width:760px){
 	body{font-size:15px}
-	.topbar{min-height:0;padding:6px 10px;gap:8px}
+	.side-toggle{display:none}
+	/* 상단 바: 달력이 주인공이 되도록 최소 높이로 */
+	.topbar{min-height:0;padding:4px 10px;gap:8px}
 	.top-left{gap:10px;flex:1;justify-content:space-between}
 	.brand{padding:2px}
-	.brand-name{font-size:16px}
-	.tabs button{padding:4px 10px;font-size:13px}
+	.brand-name{font-size:15px}
+	.dday{font-size:11px;padding:1px 5px;border-radius:5px}
+	.tabs button{padding:3px 9px;font-size:12px}
 	.tabs .full{display:none}
 	.tabs svg,.settings-btn span{display:none}
-	.settings-btn{padding:8px}
+	.settings-btn{padding:5px;border:0}
+	.settings-btn svg{width:16px;height:16px}
 	.live,.peers{display:none}
 	.top-right{gap:0}
 
@@ -316,8 +330,8 @@ table.pt{border-collapse:separate;border-spacing:0;min-width:100%;font-size:15px
 	.day .entry .sub,.day .entry .note-mark,.day .trash{display:none}
 	.day .entry .cls,.day .entry .entry-title{font-size:10px;font-weight:600;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
 	.day .entry .cls{flex-shrink:0;max-width:100%}
-	/* 교과·외부는 [교시 칩] 학급만, 전학급이면 칩만. 세부 내용은 날짜를 누르면 아래 패널에서 */
-	.day .entry .cls.is-all,.day .entry.k-subject .entry-title{display:none}
+	/* 교과·외부는 [교시 칩] 학급(전학급 포함)만. 세부 내용은 날짜를 누르면 아래 패널에서 */
+	.day .entry.k-subject .entry-title{display:none}
 	.day .task{padding:1px 1px 1px 0}
 	.day .task-box{width:12px;height:12px;border-width:1.5px;border-radius:3px}
 	.day .task-box svg{width:8px;height:8px}
@@ -327,8 +341,9 @@ table.pt{border-collapse:separate;border-spacing:0;min-width:100%;font-size:15px
 	.day-panel{position:fixed;left:0;right:0;bottom:0;z-index:60;width:auto;max-height:62dvh;border-radius:18px 18px 0 0;border:0;box-shadow:0 -10px 40px #1d2d4a33;padding:16px 16px calc(20px + env(safe-area-inset-bottom,0px))}
 	.day-panel h2{font-size:20px}
 	.day-panel .trash{visibility:visible}
-	.day-panel .primary.small{font-size:13px;padding:5px 10px;gap:3px;border-radius:8px}
-	.day-panel .primary.small svg{width:13px;height:13px}
+	.day-panel .add-quiet{font-size:13px;padding:4px 8px}
+	.day-panel .add-quiet svg{width:12px;height:12px}
+	.day-panel .close-day{display:inline-flex}
 	.day-panel .overline{margin:14px 0 8px}
 	.sheet-open .fab{display:none}
 	.fab{display:grid;place-items:center;position:fixed;right:14px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:50;width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:var(--panel);color:var(--blue);box-shadow:0 2px 10px #1d2d4a26;padding:0}
@@ -452,6 +467,7 @@ table.pt{border-collapse:separate;border-spacing:0;min-width:100%;font-size:15px
 			<div class="weekdays" id="weekdays"></div>
 			<div class="month-scroll"><div class="month-grid" id="grid"></div></div>
 		</section>
+		<button class="side-toggle" id="sideToggle"></button>
 		<aside class="day-panel panel" id="dayPanel" hidden></aside>
 	</div>
 
@@ -510,6 +526,7 @@ const state = {
 	cfg: {name:'영화제', start:'', end:'', classes:DEFAULT_CLASSES, lessons:[], periods:7},
 	view: new Date(),
 	day: null,
+	side: true,	// PC 사이드바 펼침 여부
 	hiddenTypes: new Set(),
 	cls: '',
 	q: '',
@@ -724,8 +741,8 @@ function entryRow(e){
 	const body = t === 'event'
 		? `<span class="entry-title" style="color:var(--ink);font-weight:600">${esc(e.title)}</span>${cls ? `<span class="sub">${esc(cls)}</span>` : ''}`
 		: t === 'subject'
-		? `<span class="cls${e.classes === 'all' ? ' is-all' : ''}">${esc(cls)}</span><span class="entry-title">${esc(e.title)}</span>`
-		: `<span class="cls${e.classes === 'all' ? ' is-all' : ''}">${esc(cls)}</span><span class="sub">${esc(extSummary(e))}</span>`;
+		? `<span class="cls">${esc(cls)}</span><span class="entry-title">${esc(e.title)}</span>`
+		: `<span class="cls">${esc(cls)}</span><span class="sub">${esc(extSummary(e))}</span>`;
 	// 할 일은 칩 대신 체크박스만. 완료하면 흐리게 + 취소선
 	const lead = e.todo
 		? `<button class="task" data-todo="${e.id}" aria-label="${esc(titleOf(e))} ${e.done ? '완료 취소' : '완료'}" aria-pressed="${!!e.done}"><span class="task-box${e.done ? ' on' : ''}">${e.done ? CHECK : ''}</span></button>`
@@ -749,7 +766,7 @@ function renderGrid(){
 	$('#weekdays').innerHTML = cols.map(i => `<span class="${i === 0 ? 'sun' : ''}">${WD[i]}</span>`).join('');
 	$('#grid').innerHTML = days.map((d, i) => {
 		const key = ymd(d), list = (byDate[key] || []).sort(byTime), wd = d.getDay();
-		const cls = ['day', (wd === 0 || wd === 6) && 'wkend', wd === 0 && 'sun', d.getMonth() !== m && 'out', key === state.day && 'selected', inFest(key) && 'fest', (i + 1) % cols.length === 0 && 'edge'].filter(Boolean).join(' ');
+		const cls = ['day', (wd === 0 || wd === 6) && 'wkend', wd === 0 && 'sun', d.getMonth() !== m && 'out', key === state.day && state.side && 'selected', inFest(key) && 'fest', (i + 1) % cols.length === 0 && 'edge'].filter(Boolean).join(' ');
 		return `<div class="${cls}" data-date="${key}">
 			<div class="day-heading"><button class="date-number${key === today ? ' today' : ''}" data-open="${key}" aria-label="${longDate(key)} 일정 보기">${d.getDate()}</button>${key === today ? '<small>오늘</small>' : inFest(key) ? `<small class="fest-tag">영화제 ${festDay(key)}일차</small>` : ''}<button class="day-add" data-add="${key}" aria-label="${longDate(key)} 일정 추가" title="일정 추가">${PLUS}</button></div>
 			<div class="day-content">${list.map(entryRow).join('')}${list.length > 4 ? `<span class="more-m">+${list.length - 4}</span>` : ''}</div>
@@ -769,13 +786,16 @@ function progressButton(c, n){
 }
 
 function renderDayPanel(){
-	const panel = $('#dayPanel');
+	const panel = $('#dayPanel'), open = !!state.day && (isMobile() || state.side);
 	document.body.classList.toggle('sheet-open', !!state.day);
-	if (!state.day) { panel.hidden = true; return; }
+	const tg = $('#sideToggle');
+	tg.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="${open ? 'm9 6 6 6-6 6' : 'm15 6-6 6 6 6'}"/></svg>`;
+	tg.setAttribute('aria-label', open ? '하루 일정 접기' : '하루 일정 펼치기'); tg.title = open ? '접기' : '펼치기';
+	if (!open) { panel.hidden = true; return; }
 	panel.hidden = false;
 	const d = parse(state.day), list = visibleEvents().filter(e => e.date === state.day).sort(byTime);
 	panel.innerHTML = `<header><div><p class="overline">${inFest(state.day) ? `영화제 ${festDay(state.day)}일차` : '하루 일정'}</p><h2>${d.getMonth()+1}월 ${d.getDate()}일<small>${WD[d.getDay()]}요일</small></h2></div>
-		<div style="display:flex;gap:4px"><button class="primary small" data-add="${state.day}">${PLUS}추가</button><button class="icon" data-act="close-day" aria-label="닫기">${CLOSE}</button></div></header>
+		<div style="display:flex;gap:4px"><button class="add-quiet" data-add="${state.day}">${PLUS}추가</button><button class="icon close-day" data-act="close-day" aria-label="닫기">${CLOSE}</button></div></header>
 		<p class="overline">일정 ${list.length}개</p>
 		<div class="side-list">${list.length ? list.map(e => {
 			const sess = typeOf(e) === 'ext' ? classesOf(e).filter(c => e.sessions?.[c]).map(c => `<b>${esc(c)}</b><small>${e.sessions[c]}차시 · ${esc(lesson(e.sessions[c]).title)}</small>${progressButton(c, e.sessions[c])}`).join('') : '';
@@ -1011,7 +1031,7 @@ document.addEventListener('click', e => {
 }, true);
 
 function openDay(date){
-	state.day = date;
+	state.day = date; state.side = true;
 	const d = parse(date);
 	if (d.getMonth() !== state.view.getMonth() || d.getFullYear() !== state.view.getFullYear()) state.view = new Date(d.getFullYear(), d.getMonth(), 1);
 	renderGrid(); renderDayPanel();
@@ -1030,6 +1050,7 @@ $('#calView').addEventListener('click', e => {
 $('#prev').onclick = () => { state.view = new Date(state.view.getFullYear(), state.view.getMonth() - 1, 1); renderGrid(); };
 $('#next').onclick = () => { state.view = new Date(state.view.getFullYear(), state.view.getMonth() + 1, 1); renderGrid(); };
 $('#todayBtn').onclick = () => openDay(ymd(new Date()));
+$('#sideToggle').onclick = e => { e.stopPropagation(); state.side = !state.side; if (state.side && !state.day) state.day = ymd(new Date()); renderGrid(); renderDayPanel(); };
 $('#festBtn').onclick = () => state.cfg.start && openDay(state.cfg.start);
 $('#q').addEventListener('input', e => { state.q = e.target.value; renderGrid(); renderDayPanel(); });
 document.querySelectorAll('[data-filter]').forEach(b => b.onclick = () => { const t = b.dataset.filter; state.hiddenTypes.has(t) ? state.hiddenTypes.delete(t) : state.hiddenTypes.add(t); renderFilters(); renderGrid(); renderDayPanel(); });
