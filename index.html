@@ -160,9 +160,9 @@ svg{flex-shrink:0}
 /* PC에서는 닫기(×) 대신 사이드바 가장자리의 화살표 버튼으로 접고 펼침 */
 .day-panel .close-day{display:none}
 #calView{gap:0}
-.side-toggle{align-self:center;width:18px;height:44px;margin:0 3px;padding:0;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--muted);flex-shrink:0}
-.side-toggle:hover:not(:disabled){background:var(--hover);color:var(--ink)}
-.side-toggle svg{width:12px;height:12px}
+.side-toggle{align-self:center;width:24px;height:64px;margin:0 3px;padding:0;border:1px solid #d1d1d6;border-radius:8px;background:var(--panel);color:var(--ink-2);flex-shrink:0}
+.side-toggle:hover:not(:disabled){background:var(--blue-soft);border-color:var(--blue-ring);color:var(--blue)}
+.side-toggle svg{width:16px;height:16px}
 .side-item{border:1px solid var(--line);border-radius:14px;padding:10px;display:flex;flex-direction:column;gap:8px}
 .side-item .entry{font-size:17px}
 .side-note{font-size:15px;color:var(--ink-2);line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere;padding:0 6px}
@@ -239,15 +239,16 @@ svg{flex-shrink:0}
 .legend span{display:inline-flex;align-items:center;gap:6px}
 .legend i{width:16px;height:16px;border-radius:5px}
 .tablewrap{flex:1;overflow:auto;border-top:1px solid var(--grid)}
-table.pt{border-collapse:separate;border-spacing:0;min-width:100%;font-size:15px}
+/* 표는 내용 폭만큼만 (차시가 적을 때 학급 열이 늘어나 붕 뜨지 않게) */
+table.pt{border-collapse:separate;border-spacing:0;font-size:15px}
 .pt th,.pt td{border-bottom:1px solid var(--grid);padding:6px;text-align:center;vertical-align:middle}
-.pt thead th{position:sticky;top:0;background:var(--panel-2);z-index:2;font-weight:600;color:var(--ink-2);min-width:104px;vertical-align:bottom;padding:10px 6px}
+.pt thead th{position:sticky;top:0;background:var(--panel-2);z-index:2;font-weight:600;color:var(--ink-2);width:112px;min-width:112px;vertical-align:bottom;padding:10px 6px}
 .pt thead th b{display:block;font-size:14px;color:var(--ext-fg)}
 .pt thead th small{display:block;font-size:14px;font-weight:500;color:var(--ink-2);line-height:1.35;margin-top:2px}
-.pt .cn{position:sticky;left:0;background:var(--panel);z-index:1;text-align:left;padding:8px 16px;min-width:190px}
+.pt .cn{position:sticky;left:0;background:var(--panel);z-index:1;text-align:center;padding:8px 12px;width:150px;min-width:150px}
 .pt thead .cn{z-index:3;background:var(--panel-2)}
 .pt .cn b{font-size:17px}
-.pt .cn small{display:block;font-size:14px;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:210px}
+.pt .cn small{display:block;font-size:14px;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:150px;margin-inline:auto}
 .cell{width:100%;min-height:52px;flex-direction:column;gap:1px;padding:4px;border-radius:10px;font-size:14px;line-height:1.25;font-weight:700}
 .cell.done{background:var(--ext-solid);border-color:var(--ext-solid);color:#fff}
 .cell.next{border:1.5px dashed var(--ext-solid);color:var(--ext-fg);background:var(--panel)}
@@ -366,10 +367,10 @@ table.pt{border-collapse:separate;border-spacing:0;min-width:100%;font-size:15px
 	.tablewrap{max-height:none}
 	table.pt{font-size:12px}
 	.pt th,.pt td{padding:3px}
-	.pt thead th{min-width:62px;max-width:62px;padding:6px 3px}
+	.pt thead th{width:62px;min-width:62px;max-width:62px;padding:6px 3px}
 	.pt thead th b{font-size:11px}
 	.pt thead th small{font-size:10.5px;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}
-	.pt .cn{min-width:48px;padding:4px 8px}
+	.pt .cn{width:48px;min-width:48px;padding:4px 8px}
 	.pt .cn b{font-size:14px}
 	.pt .cn small{display:none}
 	.cell{min-height:36px;padding:2px;font-size:11px;border-radius:7px;letter-spacing:-.3px}
